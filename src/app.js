@@ -2,10 +2,25 @@ const createError = require("http-errors");
 const express = require("express");
 const logger = require("morgan");
 const indexRouter = require("./routes/index");
+const rfs = require("rotating-file-stream");
+const path = require("path");
 
 const app = express();
 
-app.use(logger("dev"));
+// create a rotating write stream
+const accessLogStream = rfs("access.log", {
+  interval: "10d", // rotate daily
+  path: path.join("..", "log"),
+  size: "1M",
+});
+
+// setup the logger
+if (process.env.NODE_ENV === "production") {
+  app.use(logger("combined", { stream: accessLogStream }));
+} else {
+  app.use(logger("dev"));
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -24,7 +39,7 @@ app.use((err, req, res) => {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  res.send("error");
 });
 
 module.exports = app;

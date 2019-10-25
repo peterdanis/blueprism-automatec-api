@@ -4,16 +4,16 @@
   "private": true,
   "author": "Peter Danis <peter.danis@outlook.com>",
   "scripts": {
-    "build": "nexe ./bin/www",
-    "start": "node ./bin/www",
+    "build": "rmdir /Q /S build & nexe -i ./src/server.js -o ./build/Blue_Prism_AutomateC_API_server.exe -t windows-x64-12.13.0 && copy .\\assets\\*.* .\\build\\ && ren .\\build\\WinSW.NET4.exe Blue_Prism_AutomateC_API_installer.exe",
+    "start": "nodemon ./src/server.js",
     "test": "jest"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.17.1",
     "http-errors": "~1.7.3",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "rotating-file-stream": "^1.4.6"
   },
   "devDependencies": {
     "eslint": "^6.5.1",
@@ -24,7 +24,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-security": "^1.4.0",
     "nexe": "^3.3.2",
-    "node-windows": "^0.1.14",
+    "nodemon": "^1.19.4",
     "prettier": "^1.16.4"
   },
   "eslintConfig": {
