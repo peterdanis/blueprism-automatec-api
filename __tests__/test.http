@@ -4,8 +4,17 @@
 
 ###
 
-get http://{{host}}
+GET http://{{host}}
 
 ###
 
+GET http://{{host}}/something
+
+###
+
+GET http://{{host}}/processes
+
+###
+
+GET http://{{host}}/processes/d6b37383-c44c-4546-af62-1f0e9044f4ed
 
