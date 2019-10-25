@@ -1,44 +1,62 @@
 const express = require("express");
 const path = require("path");
-const { execFile } = require("child_process");
+const execFile = require("util").promisify(require("child_process").execFile);
 
+const router = express.Router();
 const dir = process.env.BP_PATH || [
-  "c:",
+  "C:",
   "Program Files",
   "Blue Prism Limited",
   "Blue Prism Automate",
 ];
+const binPath = path.join(...dir, "AutomateC.exe");
 
-const exe = path.join(...dir, "AutomateC.exe");
+router.post("/processes", async (req, res, next) => {
+  // TODO: add check for ID - unsecure
+  const args = ["/sso", "/dbconname", "Development", "/run", req.body.process];
 
-const router = express.Router();
+  try {
+    const { stdout } = await execFile(binPath, args);
 
-router.get("/", (req, res) => {
-  res.json(process.env.NODE_ENV || {});
+    res.json({ status: stdout });
+  } catch (err) {
+    res.status(500);
+    next(err);
+  }
 });
 
-// const wrapper = fn => (req, res, next) =>
-//   fn(req, res, next).catch(console.error);
-
-router.get("/processes/:id", (req, res, next) => {
+router.get("/processes/:id", async (req, res, next) => {
   // TODO: add check for ID - unsecure
-  execFile(
-    exe,
-    ["/sso", "/dbconname", "Development", "/status", req.params.id],
-    (err, stdout, stderr) => {
-      if (stdout && stdout.match("No information found for that session")) {
-        res.status(400);
-        next(stdout);
-      }
+  const args = ["/sso", "/dbconname", "Development", "/status", req.params.id];
 
-      if (err) {
-        next(stderr || stdout || err);
-      } else {
-        res.status(200);
-        res.json({ status: stdout });
-      }
-    },
-  );
+  try {
+    const { stdout } = await execFile(binPath, args);
+
+    res.json({ status: stdout });
+  } catch (err) {
+    res.status(500);
+    next(err);
+  }
+});
+
+router.post("/processes/:id/stop", async (req, res, next) => {
+  // TODO: add check for ID - unsecure
+  const args = [
+    "/sso",
+    "/dbconname",
+    "Development",
+    "/requeststop",
+    req.params.id,
+  ];
+
+  try {
+    const { stdout } = await execFile(binPath, args);
+
+    res.json({ status: stdout });
+  } catch (err) {
+    res.status(500);
+    next(err);
+  }
 });
 
 module.exports = router;

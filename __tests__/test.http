@@ -1,6 +1,7 @@
 @hostname = localhost
 @port = 3000
 @host = {{hostname}}:{{port}}
+@session = 55f3f1f1-49c5-4200-8dcf-0e270c143ca9
 
 ###
 
@@ -12,9 +13,22 @@ GET http://{{host}}/something
 
 ###
 
-GET http://{{host}}/processes
+POST http://{{host}}/processes HTTP/1.1
+content-type: application/json
+
+{"process": "Login"}###
 
 ###
 
-GET http://{{host}}/processes/d6b37383-c44c-4546-af62-1f0e9044f4ed
+POST http://{{host}}/processes HTTP/1.1
+content-type: application/json
 
+{"process": "Test process"}
+
+###
+
+GET http://{{host}}/processes/{{session}}
+
+###
+
+POST http://{{host}}/processes/{{session}}/stop

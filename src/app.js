@@ -24,7 +24,7 @@ app.use(express.json());
 
 app.use("/", indexRouter);
 
-app.get("*", (req, res, next) => {
+app.use("*", (req, res, next) => {
   // 404 handler
   res.status(404);
   next(`Cannot ${req.method} ${req.url}`);
@@ -33,8 +33,22 @@ app.get("*", (req, res, next) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   // Error handler
-  res.status(res.statusCode || err.status || 500);
-  res.json({ error: err });
+  const response = {};
+
+  if (err.stdout) {
+    res.status(400);
+    response.error = err.stdout;
+  } else {
+    if (err.cmd) {
+      err.cmd = "Redacted in error handler";
+    }
+    if (err.spawnargs) {
+      err.spawnargs = "Redacted in error handler";
+    }
+    res.status(res.statusCode || err.status || 500);
+    response.error = err;
+  }
+  res.json(response);
 });
 
 module.exports = app;
