@@ -1,0 +1,122 @@
+{
+  "name": "blueprism-http-rest",
+  "version": "0.0.0",
+  "private": true,
+  "author": "Peter Danis <peter.danis@outlook.com>",
+  "scripts": {
+    "build": "nexe ./bin/www",
+    "start": "node ./bin/www",
+    "test": "jest"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.17.1",
+    "http-errors": "~1.7.3",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jest": "^22.20.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-security": "^1.4.0",
+    "nexe": "^3.3.2",
+    "node-windows": "^0.1.14",
+    "prettier": "^1.16.4"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "eslint:recommended",
+      "plugin:jest/recommended",
+      "plugin:prettier/recommended",
+      "plugin:security/recommended",
+      "plugin:import/errors",
+      "plugin:import/warnings"
+    ],
+    "rules": {
+      "linebreak-style": "off",
+      "quotes": [
+        "warn",
+        "double"
+      ],
+      "no-plusplus": "off",
+      "comma-dangle": [
+        "warn",
+        {
+          "arrays": "always-multiline",
+          "objects": "always-multiline",
+          "imports": "always-multiline",
+          "exports": "always-multiline",
+          "functions": "always-multiline"
+        }
+      ],
+      "prettier/prettier": [
+        "warn",
+        {
+          "trailingComma": "all"
+        }
+      ],
+      "sort-keys": [
+        "warn",
+        "asc",
+        {
+          "caseSensitive": false,
+          "natural": true
+        }
+      ],
+      "sort-imports": [
+        "warn",
+        {
+          "ignoreCase": true,
+          "ignoreDeclarationSort": false,
+          "ignoreMemberSort": false,
+          "memberSyntaxSortOrder": [
+            "none",
+            "all",
+            "multiple",
+            "single"
+          ]
+        }
+      ],
+      "import/order": [
+        "error",
+        {
+          "groups": [],
+          "newlines-between": "never"
+        }
+      ],
+      "spaced-comment": [
+        "warn",
+        "always",
+        {
+          "markers": [
+            "/ <reference"
+          ]
+        }
+      ]
+    },
+    "env": {
+      "es6": true,
+      "node": true
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/mocks/*.js",
+          "**/*.spec.js",
+          "**/*.test.js"
+        ],
+        "env": {
+          "jest": true
+        },
+        "rules": {
+          "global-require": "off"
+        }
+      }
+    ]
+  }
+}
