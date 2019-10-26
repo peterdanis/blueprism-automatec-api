@@ -11,8 +11,7 @@ const dir = process.env.BP_PATH || [
 ];
 const binPath = path.join(...dir, "AutomateC.exe");
 
-router.post("/processes", async (req, res, next) => {
-  // TODO: add check for ID - unsecure
+router.post("/", async (req, res, next) => {
   const args = ["/sso", "/dbconname", "Development", "/run", req.body.process];
 
   try {
@@ -25,7 +24,7 @@ router.post("/processes", async (req, res, next) => {
   }
 });
 
-router.get("/processes/:id", async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   // TODO: add check for ID - unsecure
   const args = ["/sso", "/dbconname", "Development", "/status", req.params.id];
 
@@ -39,7 +38,7 @@ router.get("/processes/:id", async (req, res, next) => {
   }
 });
 
-router.post("/processes/:id/stop", async (req, res, next) => {
+router.post("/:id/stop", async (req, res, next) => {
   // TODO: add check for ID - unsecure
   const args = [
     "/sso",
