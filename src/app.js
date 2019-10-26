@@ -20,8 +20,9 @@ if (process.env.NODE_ENV === "production") {
   app.use(logger("dev"));
 }
 
+app.disable("etag");
+app.disable("x-powered-by");
 app.use(express.json());
-
 app.use("/", indexRouter);
 
 app.use("*", (req, res, next) => {
