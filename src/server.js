@@ -36,6 +36,15 @@ app.set("port", port);
 const server = http.createServer(app);
 
 /**
+ * TODO: Create HTTPS server.
+ */
+// const options = {
+//   pfx: fs.readFileSync("mypfxfile"),
+//   passphrase: "foo",
+// };
+// const server = https.createServer(options, app);
+
+/**
  * Event listener for HTTP server "error" event.
  */
 const onError = error => {
