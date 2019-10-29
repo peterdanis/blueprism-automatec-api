@@ -1,23 +1,12 @@
 const express = require("express");
-const logger = require("morgan");
 const processesRouter = require("./routes/processes");
-const rfs = require("rotating-file-stream");
-const path = require("path");
+const setupLog = require("./utils/logging");
+const setupRateLimiter = require("./utils/rateLimiter");
 
 const app = express();
 
-// setup the logger
-if (process.env.NODE_ENV === "production") {
-  // create a rotating write stream
-  const accessLogStream = rfs("access.log", {
-    interval: "7d", // rotate weekly
-    path: path.join("log"),
-    size: "1M",
-  });
-  app.use(logger("combined", { stream: accessLogStream }));
-} else {
-  app.use(logger("dev"));
-}
+setupLog(app);
+setupRateLimiter(app);
 
 // Setup headers and json
 app.disable("etag");
