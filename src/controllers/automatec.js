@@ -15,9 +15,10 @@ const idRegexp = new RegExp(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
 const nameRegexp = new RegExp(/^[\w ]+$/);
 
 const runAutomateC = async (action, identifier) => {
-  let result = {};
+  let commandResult;
+  const customError = new Error();
+
   try {
-    const customError = new Error();
     switch (action) {
       case "getStatus":
         if (!idRegexp.test(identifier)) {
@@ -26,9 +27,8 @@ const runAutomateC = async (action, identifier) => {
             "Supplied session ID is not a valid session identifier. The correct format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
           throw customError;
         }
-        result = await execFile(bin, [...args, "/status", identifier]);
-        result = { status: result.stdout.match(/Status:([a-zA-Z]*)/i)[1] };
-        break;
+        commandResult = await execFile(bin, [...args, "/status", identifier]);
+        return { status: commandResult.stdout.match(/Status:([a-zA-Z]*)/i)[1] };
 
       case "startProcess":
         if (!nameRegexp.test(identifier)) {
@@ -36,9 +36,10 @@ const runAutomateC = async (action, identifier) => {
           customError.message = "Incorrect process name supplied";
           throw customError;
         }
-        result = await execFile(bin, [...args, "/run", identifier]);
-        result = { sessionId: result.stdout.match(/session:([0-9a-z-]*)/i)[1] };
-        break;
+        commandResult = await execFile(bin, [...args, "/run", identifier]);
+        return {
+          sessionId: commandResult.stdout.match(/session:([0-9a-z-]*)/i)[1],
+        };
 
       case "stopProcess":
         if (!idRegexp.test(identifier)) {
@@ -47,45 +48,45 @@ const runAutomateC = async (action, identifier) => {
             "Supplied session ID is not a valid session identifier. The correct format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
           throw customError;
         }
-        result = await execFile(bin, [...args, "/requeststop", identifier]);
-        result = { status: "Stop requested" };
-        break;
+        commandResult = await execFile(bin, [
+          ...args,
+          "/requeststop",
+          identifier,
+        ]);
+        return { status: "Stop requested" };
 
       default:
-        customError.statusCode = 501;
         customError.message =
-          "No action specified, check server <-> bin file integration part";
+          "Action for this route is not implemented, check server <-> bin file integration part";
         throw customError;
     }
   } catch (error) {
-    if (error.stdout) {
-      const customError = new Error();
-      switch (true) {
-        case error.stdout.match(/The session .* is not running/) != null:
-          customError.statusCode = 400;
-          customError.message = "Proccess is not running";
-          break;
+    switch (true) {
+      case error.stdout.match(/The session .* is not running/) !== null:
+        customError.statusCode = 400;
+        customError.message = "Proccess is not running";
+        break;
 
-        case error.stdout.match(/No information found for that session/) !=
-          null:
-          customError.statusCode = 400;
-          customError.message = "No information found for that session";
-          break;
+      case error.stdout.match(/No information found for that session/) !== null:
+        customError.statusCode = 400;
+        customError.message = "No information found for that session";
+        break;
 
-        case error.stdout.match(/process .* does not exist/) != null:
-          customError.statusCode = 400;
-          customError.message = "Process does not exist";
-          break;
+      case error.stdout.match(/process .* does not exist/) !== null:
+        customError.statusCode = 400;
+        customError.message = "Process does not exist";
+        break;
 
-        default:
-          customError.message = error.stdout;
-          break;
-      }
-      throw customError;
+      case error.code === "ENOENT":
+        customError.message = "AutomateC.exe not found, check server config";
+        break;
+
+      default:
+        customError.message = error.stdout || error.message;
+        break;
     }
-    throw error;
+    throw customError;
   }
-  return result;
 };
 
 module.exports = runAutomateC;
