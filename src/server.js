@@ -1,15 +1,16 @@
-#!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
+const packageJson = require("../package.json");
+let debug = require("debug")(`express:${packageJson.name}`);
 const app = require("./app");
-const debug = require("debug")("blueprism-http-rest:server");
 const http = require("http");
 
-/**
- * Normalize a port into a number, string, or false.
- */
+// Use console.log if not debugging
+if (!debug.enabled) {
+  debug = console.log; // eslint-disable-line no-console
+}
+
+debug(`Version: ${packageJson.version}`);
+
+// Normalize a port into a number, string, or false.
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -24,29 +25,21 @@ const normalizePort = val => {
   return false;
 };
 
-/**
- * Get port from environment and store in Express.
- */
+// Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
-/**
- * Create HTTP server.
- */
+// Create HTTP server.
 const server = http.createServer(app);
 
-/**
- * TODO: Create HTTPS server.
- */
+// TODO: Create HTTPS server.
 // const options = {
 //   pfx: fs.readFileSync("mypfxfile"),
 //   passphrase: "foo",
 // };
 // const server = https.createServer(options, app);
 
-/**
- * Event listener for HTTP server "error" event.
- */
+// Event listener for HTTP server "error" event.
 const onError = error => {
   if (error.syscall !== "listen") {
     throw error;
@@ -54,7 +47,6 @@ const onError = error => {
 
   const bind = typeof port === "string" ? `Pipe ${port}` : `Port ${port}`;
 
-  // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
       debug(`${bind} requires elevated privileges`);
@@ -69,18 +61,14 @@ const onError = error => {
   }
 };
 
-/**
- * Event listener for HTTP server "listening" event.
- */
+// Event listener for HTTP server "listening" event.
 const onListening = () => {
   const addr = server.address();
   const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
   debug(`Listening on ${bind}`);
 };
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+// Listen on provided port, on all network interfaces.
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
