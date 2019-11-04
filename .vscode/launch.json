@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Start server",
+      "program": "${workspaceFolder}\\src\\server.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Start server (w/o internals)",
+      "program": "${workspaceFolder}\\src\\server.js",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Start server (w/o internals/modules)",
+      "program": "${workspaceFolder}\\src\\server.js",
+      "skipFiles": ["node_modules/**", "<node_internals>/**"]
+    }
+  ]
+}
