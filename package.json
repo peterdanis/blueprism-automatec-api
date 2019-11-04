@@ -1,6 +1,6 @@
 {
   "name": "blueprism-http-rest",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "author": "Peter Danis <peter.danis@outlook.com>",
   "scripts": {
@@ -13,7 +13,7 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "debug": "~2.6.9",
+    "debug": "~4.1.1",
     "express": "~4.17.1",
     "express-rate-limit": "^5.0.0",
     "http-errors": "~1.7.3",
@@ -21,11 +21,11 @@
     "rotating-file-stream": "^1.4.6"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
+    "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "14.0.0",
-    "eslint-config-prettier": "^6.4.0",
+    "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-jest": "^22.20.0",
+    "eslint-plugin-jest": "^23.0.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-security": "^1.4.0",
