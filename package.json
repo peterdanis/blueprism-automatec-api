@@ -8,6 +8,9 @@
     "start": "nodemon ./src/server.js",
     "test": "jest"
   },
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "dependencies": {
     "debug": "~2.6.9",
     "express": "~4.17.1",
