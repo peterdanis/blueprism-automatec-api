@@ -27,13 +27,13 @@ app.use("*", (req, res, next) => {
 
 // Error handler
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  if (res.statusCode >= 400) {
-    res.status(res.statusCode);
+app.use((error, req, res, next) => {
+  if (error.statusCode || res.statusCode >= 400) {
+    res.status(error.statusCode || res.statusCode);
   } else {
     res.status(500);
   }
-  res.json({ error: err.message || err });
+  res.json({ error: error.message || error });
 });
 
 module.exports = app;

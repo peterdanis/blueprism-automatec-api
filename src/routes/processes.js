@@ -1,60 +1,35 @@
 const express = require("express");
-const path = require("path");
-const execFile = require("util").promisify(require("child_process").execFile);
+const automatec = require("../controllers/automatec");
 
 const router = express.Router();
-const dir = process.env.BP_PATH || [
-  "C:",
-  "Program Files",
-  "Blue Prism Limited",
-  "Blue Prism Automate",
-];
-const binPath = path.join(...dir, "AutomateC.exe");
 
+// Start process
 router.post("/", async (req, res, next) => {
-  const args = ["/sso", "/dbconname", "Development", "/run", req.body.process];
-
   try {
-    const { stdout } = await execFile(binPath, args);
-
-    res.json({ status: stdout });
-  } catch (err) {
-    res.status(500);
-    next(err);
+    const result = await automatec("startProcess", req.body.process);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
   }
 });
 
+// Get status of specific process
 router.get("/:id", async (req, res, next) => {
-  // TODO: add check for ID - unsecure
-  const args = ["/sso", "/dbconname", "Development", "/status", req.params.id];
-
   try {
-    const { stdout } = await execFile(binPath, args);
-
-    res.json({ status: stdout });
-  } catch (err) {
-    res.status(500);
-    next(err);
+    const result = await automatec("getStatus", req.params.id);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
   }
 });
 
+// Stop specific process
 router.post("/:id/stop", async (req, res, next) => {
-  // TODO: add check for ID - unsecure
-  const args = [
-    "/sso",
-    "/dbconname",
-    "Development",
-    "/requeststop",
-    req.params.id,
-  ];
-
   try {
-    const { stdout } = await execFile(binPath, args);
-
-    res.json({ status: stdout });
-  } catch (err) {
-    res.status(500);
-    next(err);
+    const result = await automatec("stopProcess", req.params.id);
+    res.status(202).json(result);
+  } catch (error) {
+    next(error);
   }
 });
 
