@@ -1,7 +1,9 @@
 const packageJson = require("../package.json");
 let debug = require("debug")(`express:${packageJson.name}`);
 const app = require("./app");
-const http = require("http");
+const fs = require("fs");
+// const http = require("http");
+const https = require("https");
 
 // Use console.log if not debugging
 if (!debug.enabled) {
@@ -30,14 +32,14 @@ const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 // Create HTTP server.
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 // TODO: Create HTTPS server.
-// const options = {
-//   pfx: fs.readFileSync("mypfxfile"),
-//   passphrase: "foo",
-// };
-// const server = https.createServer(options, app);
+const options = {
+  passphrase: "password1234",
+  pfx: fs.readFileSync("powershellcert.pfx"),
+};
+const server = https.createServer(options, app);
 
 // Event listener for HTTP server "error" event.
 const onError = error => {
