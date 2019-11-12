@@ -4,8 +4,9 @@
   "private": true,
   "author": "Peter Danis <peter.danis@outlook.com>",
   "scripts": {
-    "debug": "set DEBUG=express:* & yarn start",
     "build": "rmdir /Q /S build & nexe -i ./src/server.js -o ./build/Blue_Prism_AutomateC_API_server.exe -t windows-x64-12.13.0 && copy .\\assets\\*.* .\\build\\ && ren .\\build\\WinSW.NET4.exe Blue_Prism_AutomateC_API_installer.exe",
+    "debug": "set DEBUG=express:* & yarn start",
+    "lint": "eslint ./src/**/*.js",
     "start": "nodemon ./src/server.js",
     "test": "jest"
   },
@@ -32,98 +33,5 @@
     "nexe": "^3.3.2",
     "nodemon": "^1.19.4",
     "prettier": "^1.16.4"
-  },
-  "eslintConfig": {
-    "extends": [
-      "airbnb-base",
-      "eslint:recommended",
-      "plugin:jest/recommended",
-      "plugin:prettier/recommended",
-      "plugin:promise/recommended",
-      "plugin:security/recommended",
-      "plugin:import/errors",
-      "plugin:import/warnings"
-    ],
-    "rules": {
-      "linebreak-style": "off",
-      "quotes": [
-        "warn",
-        "double"
-      ],
-      "no-plusplus": "off",
-      "comma-dangle": [
-        "warn",
-        {
-          "arrays": "always-multiline",
-          "objects": "always-multiline",
-          "imports": "always-multiline",
-          "exports": "always-multiline",
-          "functions": "always-multiline"
-        }
-      ],
-      "prettier/prettier": [
-        "warn",
-        {
-          "trailingComma": "all"
-        }
-      ],
-      "sort-keys": [
-        "warn",
-        "asc",
-        {
-          "caseSensitive": false,
-          "natural": true
-        }
-      ],
-      "sort-imports": [
-        "warn",
-        {
-          "ignoreCase": true,
-          "ignoreDeclarationSort": false,
-          "ignoreMemberSort": false,
-          "memberSyntaxSortOrder": [
-            "none",
-            "all",
-            "multiple",
-            "single"
-          ]
-        }
-      ],
-      "import/order": [
-        "error",
-        {
-          "groups": [],
-          "newlines-between": "never"
-        }
-      ],
-      "spaced-comment": [
-        "warn",
-        "always",
-        {
-          "markers": [
-            "/ <reference"
-          ]
-        }
-      ]
-    },
-    "env": {
-      "es6": true,
-      "node": true
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/mocks/*.js",
-          "**/*.spec.js",
-          "**/*.test.js"
-        ],
-        "env": {
-          "jest": true
-        },
-        "rules": {
-          "global-require": "off"
-        }
-      }
-    ]
   }
 }
