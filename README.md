@@ -1,1 +1,1 @@
-# blueprism-http-rest
+# Blue Prism AutomateC API
