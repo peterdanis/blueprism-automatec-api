@@ -1,8 +1,7 @@
 <service>
   <id>blueprism-automatec-api</id>
   <name>Blue Prism AutomateC API</name>
-  <description>Expose AutomateC.exe (Blueprism) as HTTP REST API</description>
-  <env name="NODE_ENV" value="production"/>
+  <description>Expose AutomateC.exe (Blue Prism) as HTTP API</description>
   <startmode>automatic</startmode>
   <executable>Blue_Prism_AutomateC_API_server.exe</executable>
   <log mode="roll-by-size">

@@ -1,76 +1,58 @@
+require("dotenv").config();
 const packageJson = require("../package.json");
-let debug = require("debug")(`express:${packageJson.name}`);
 const app = require("./app");
 const fs = require("fs");
-// const http = require("http");
+const http = require("http");
 const https = require("https");
+let debug = require("debug")(`express:${packageJson.name}`);
+
+const { env } = process;
+const port = env.BP_API_PORT || "3000";
+let server;
 
 // Use console.log if not debugging
 if (!debug.enabled) {
   debug = console.log; // eslint-disable-line no-console
 }
-
 debug(`Version: ${packageJson.version}`);
+debug(`Env: ${env.NODE_ENV}`);
 
-// Normalize a port into a number, string, or false.
-const normalizePort = val => {
-  const port = parseInt(val, 10);
-
-  if (Number.isNaN(port)) {
-    return val;
+// Create HTTP or HTTPS server.
+if (env.BP_API_HTTPS === "true") {
+  try {
+    const options = {
+      passphrase: env.BP_API_CERT_PW,
+      pfx: fs.readFileSync(env.BP_API_CERT_FILE_NAME), // eslint-disable-line security/detect-non-literal-fs-filename
+    };
+    server = https.createServer(options, app);
+  } catch (error) {
+    if (error.message === "mac verify failure") {
+      debug(
+        "Error: Please check whether certificate password stored in .env (or env variable) file is correct",
+      );
+    } else if (error.code === "ENOENT") {
+      debug(
+        `Error: ${error.message}. Generate self signed certificate, set correct cert path in .env file (or env variable) or switch to non-secure HTTP instead of HTTPS in .env file (or env variable).`,
+      );
+    } else {
+      debug(`Error: ${error.message}`);
+    }
+    process.exit(1);
   }
+} else {
+  server = http.createServer(app);
+}
 
-  if (port >= 0) {
-    return port;
-  }
-
-  return false;
-};
-
-// Get port from environment and store in Express.
-const port = normalizePort(process.env.PORT || "3000");
-app.set("port", port);
-
-// Create HTTP server.
-// const server = http.createServer(app);
-
-// TODO: Create HTTPS server.
-const options = {
-  passphrase: "password1234",
-  pfx: fs.readFileSync("powershellcert.pfx"),
-};
-const server = https.createServer(options, app);
-
-// Event listener for HTTP server "error" event.
-const onError = error => {
-  if (error.syscall !== "listen") {
-    throw error;
-  }
-
-  const bind = typeof port === "string" ? `Pipe ${port}` : `Port ${port}`;
-
-  switch (error.code) {
-    case "EACCES":
-      debug(`${bind} requires elevated privileges`);
-      process.exit(1);
-      break;
-    case "EADDRINUSE":
-      debug(`${bind} is already in use`);
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-};
-
-// Event listener for HTTP server "listening" event.
-const onListening = () => {
+server.on("error", error => {
+  debug(error);
+});
+server.on("listening", () => {
   const addr = server.address();
-  const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
-  debug(`Listening on ${bind}`);
-};
+  debug(
+    `Listening on ${addr.family} address ${env.BP_API_IP}, port ${
+      addr.port
+    }, using ${env.BP_API_HTTPS ? "HTTPS" : "HTTP"}`,
+  );
+});
 
-// Listen on provided port, on all network interfaces.
-server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+server.listen(port, env.BP_API_IP);

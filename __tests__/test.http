@@ -5,37 +5,37 @@
 
 ###
 
-GET http://{{host}}
+GET https://{{host}}
 
 ###
 
-GET http://{{host}}/something
+GET https://{{host}}/something
 
 ###
 
-POST http://{{host}}/processes HTTP/1.1
+POST https://{{host}}/processes http/1.1
 content-type: application/json
 
 {"process": "Login"}
 
 ###
 
-POST http://{{host}}/processes HTTP/1.1
+POST https://{{host}}/processes http/1.1
 content-type: application/json
 
 {"process": "Logout"}
 
 ###
 
-POST http://{{host}}/processes HTTP/1.1
+POST https://{{host}}/processes http/1.1
 content-type: application/json
 
 {"process": "Test process"}
 
 ###
 
-GET http://{{host}}/processes/{{session}}
+GET https://{{host}}/processes/{{session}}
 
 ###
 
-POST http://{{host}}/processes/{{session}}/stop
+POST https://{{host}}/processes/{{session}}/stop
