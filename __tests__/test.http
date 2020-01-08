@@ -5,15 +5,27 @@
 
 ###
 
-GET https://{{host}}
+GET https://{{host}}/missingauth
 
 ###
 
-GET https://{{host}}/something
+GET https://{{host}}/badauth
+authorization: Basic bad pw
+
+###
+
+GET https://{{host}}/404test
+authorization: Basic changeme ch@ngeM3
+
+###
+
+GET https://{{host}}/version
+authorization: Basic changeme ch@ngeM3
 
 ###
 
 POST https://{{host}}/processes http/1.1
+authorization: Basic changeme ch@ngeM3
 content-type: application/json
 
 {"process": "Login"}
@@ -21,6 +33,7 @@ content-type: application/json
 ###
 
 POST https://{{host}}/processes http/1.1
+authorization: Basic changeme ch@ngeM3
 content-type: application/json
 
 {"process": "Logout"}
@@ -28,6 +41,7 @@ content-type: application/json
 ###
 
 POST https://{{host}}/processes http/1.1
+authorization: Basic changeme ch@ngeM3
 content-type: application/json
 
 {"process": "Test process"}
@@ -35,7 +49,9 @@ content-type: application/json
 ###
 
 GET https://{{host}}/processes/{{session}}
+authorization: Basic changeme ch@ngeM3
 
 ###
 
 POST https://{{host}}/processes/{{session}}/stop
+authorization: Basic changeme ch@ngeM3

@@ -16,6 +16,9 @@ if (!debug.enabled) {
 }
 debug(`Version: ${packageJson.version}`);
 debug(`Env: ${env.NODE_ENV}`);
+debug(
+  "Note: configuration can be done via .env file in this directory and/or via env variables",
+);
 
 // Create HTTP or HTTPS server.
 if (env.BP_API_HTTPS === "true") {

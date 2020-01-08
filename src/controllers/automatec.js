@@ -72,9 +72,24 @@ const runAutomateC = async (action, identifier) => {
         customError.message = "No information found for that session";
         break;
 
+      case error.stdout.match(
+        /Could not find the session with the ID\/number/,
+      ) !== null:
+        customError.statusCode = 400;
+        customError.message = "Could not find the session with the ID/number";
+        break;
+
       case error.stdout.match(/process .* does not exist/) !== null:
         customError.statusCode = 400;
         customError.message = "Process does not exist";
+        break;
+
+      case error.stdout.match(
+        /can not create session to run process - The maximum number of concurrent sessions permitted by the current license would be exceeded/,
+      ) !== null:
+        customError.statusCode = 400;
+        customError.message =
+          "The maximum number of concurrent sessions permitted by the current license would be exceeded";
         break;
 
       case error.code === "ENOENT":

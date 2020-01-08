@@ -1,13 +1,16 @@
 const express = require("express");
 const processesRouter = require("./routes/processes");
+const setupAuth = require("./utils/auth");
 const setupLog = require("./utils/logging");
 const setupRateLimiter = require("./utils/rateLimiter");
+const { version } = require("../package.json");
 
 const app = express();
 
 // Setup logging and rate limiter
 setupLog(app);
 setupRateLimiter(app);
+setupAuth(app);
 
 // Disable headers
 app.disable("etag");
@@ -15,6 +18,10 @@ app.disable("x-powered-by");
 
 // Use JSON middleware
 app.use(express.json());
+
+app.get("/version", (req, res, next) => {
+  res.json({ version });
+});
 
 // Processes router handler
 app.use("/processes", processesRouter);

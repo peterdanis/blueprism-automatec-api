@@ -19,6 +19,8 @@
     "express": "~4.17.1",
     "express-rate-limit": "^5.0.0",
     "morgan": "^1.9.1",
+    "passport": "^0.4.1",
+    "passport-http": "^0.3.0",
     "rotating-file-stream": "^2.0.1"
   },
   "devDependencies": {
