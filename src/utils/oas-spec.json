@@ -4,11 +4,19 @@
     "version": "0.1.0",
     "description": "[Specification JSON](/api-spec)"
   },
+  "security": {
+    "UserSecurity": []
+  },
+  "securityDefinition": {
+    "UserSecurity": {
+      "type": "basic"
+    }
+  },
   "paths": {
     "/version": {
       "get": {
-        "summary": "/version",
-        "consumes": ["application/json"],
+        "summary": "Returns API version",
+        "description": "Returns version of currently running API server.",
         "parameters": [],
         "responses": {
           "200": {
@@ -28,9 +36,25 @@
     },
     "/processes": {
       "post": {
-        "summary": "/processes",
+        "summary": "Starts a new process",
+        "description": "Requests starting new process. Process name must be supplied",
         "consumes": ["application/json"],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "process",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "example": {
+                "process": "Login"
+              },
+              "properties": {
+                "process": "string"
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
             "schema": {
@@ -58,15 +82,18 @@
         "produces": ["application/json"]
       }
     },
-    "/processes/{id}": {
+    "/processes/{sessionId}": {
       "get": {
-        "summary": "/processes/{id}",
-        "consumes": ["application/json"],
+        "summary": "Returns status of the process",
+        "description": "Returns status of the process supplied in the URL path. Session ID (usually obtained when starting the process) must be supplied.",
         "parameters": [
           {
-            "name": "id",
+            "name": "sessionId",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "example": "6ee248d1-72f3-4890-af5c-ca9ea6ce4214"
+            }
           }
         ],
         "responses": {
@@ -107,15 +134,18 @@
         "produces": ["application/json"]
       }
     },
-    "/processes/{id}/stop": {
+    "/processes/{sessionId}/stop": {
       "post": {
-        "summary": "/processes/{id}/stop",
-        "consumes": ["application/json"],
+        "summary": "Requests process to stop",
+        "description": "Requests  process supplied in the URL path to stop. Session ID (usually obtained when starting the process) must be supplied.",
         "parameters": [
           {
-            "name": "id",
+            "name": "sessionId",
             "in": "path",
-            "required": true
+            "required": true,
+            "schema": {
+              "example": "6ee248d1-72f3-4890-af5c-ca9ea6ce4214"
+            }
           }
         ],
         "responses": {
