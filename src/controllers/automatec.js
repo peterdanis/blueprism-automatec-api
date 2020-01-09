@@ -1,16 +1,11 @@
 const path = require("path");
 const execFile = require("util").promisify(require("child_process").execFile); // eslint-disable-line security/detect-child-process
 
-const dir = process.env.BP_PATH || [
-  "C:",
-  "Program Files",
-  "Blue Prism Limited",
-  "Blue Prism Automate",
-];
-const bin = path.join(...dir, "AutomateC.exe");
-
+const dir =
+  process.env.BP_API_EXE_PATH ||
+  "C:\\Program Files\\Blue Prism Limited\\Blue Prism Automate";
+const bin = path.join(dir, "AutomateC.exe");
 const args = ["/sso", "/dbconname", "Development"];
-
 const idRegexp = new RegExp(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
 const nameRegexp = new RegExp(/^[\w ]+$/);
 
