@@ -14,8 +14,10 @@ passport.use(
 );
 
 const setup = app => {
-  app.use(passport.initialize());
-  app.use(passport.authenticate("basic", { session: false }));
+  if (process.env.BP_API_AUTH === "basic") {
+    app.use(passport.initialize());
+    app.use(passport.authenticate("basic", { session: false }));
+  }
 };
 
 module.exports = setup;

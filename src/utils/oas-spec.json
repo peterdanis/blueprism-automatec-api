@@ -1,0 +1,161 @@
+{
+  "info": {
+    "title": "Blue Prism AutomateC API",
+    "version": "0.1.0",
+    "description": "[Specification JSON](/api-spec)"
+  },
+  "paths": {
+    "/version": {
+      "get": {
+        "summary": "/version",
+        "consumes": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "example": "0.1.0"
+                }
+              }
+            }
+          }
+        },
+        "produces": ["application/json"]
+      }
+    },
+    "/processes": {
+      "post": {
+        "summary": "/processes",
+        "consumes": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "201": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sessionId": {
+                  "type": "string",
+                  "example": "6ee248d1-72f3-4890-af5c-ca9ea6ce4214"
+                }
+              }
+            }
+          },
+          "400": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "The maximum number of concurrent sessions permitted by the current license would be exceeded"
+                }
+              }
+            }
+          }
+        },
+        "produces": ["application/json"]
+      }
+    },
+    "/processes/{id}": {
+      "get": {
+        "summary": "/processes/{id}",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "Running"
+                }
+              }
+            }
+          },
+          "400": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "No information found for that session"
+                }
+              }
+            }
+          },
+          "500": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Cannot read property 'match' of undefined"
+                }
+              }
+            }
+          }
+        },
+        "produces": ["application/json"]
+      }
+    },
+    "/processes/{id}/stop": {
+      "post": {
+        "summary": "/processes/{id}/stop",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "Stop requested"
+                }
+              }
+            }
+          },
+          "400": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Could not find the session with the ID/number"
+                }
+              }
+            }
+          },
+          "500": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Cannot read property 'match' of undefined"
+                }
+              }
+            }
+          }
+        },
+        "produces": ["application/json"]
+      }
+    }
+  },
+  "swagger": "2.0"
+}

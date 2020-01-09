@@ -3,6 +3,7 @@ const processesRouter = require("./routes/processes");
 const setupAuth = require("./utils/auth");
 const setupLog = require("./utils/logging");
 const setupRateLimiter = require("./utils/rateLimiter");
+const setupSwagger = require("./utils/swagger.js");
 const { version } = require("../package.json");
 
 const app = express();
@@ -11,6 +12,7 @@ const app = express();
 setupLog(app);
 setupRateLimiter(app);
 setupAuth(app);
+setupSwagger(app);
 
 // Disable headers
 app.disable("etag");
@@ -19,7 +21,7 @@ app.disable("x-powered-by");
 // Use JSON middleware
 app.use(express.json());
 
-app.get("/version", (req, res, next) => {
+app.get("/version", (req, res) => {
   res.json({ version });
 });
 
@@ -28,8 +30,12 @@ app.use("/processes", processesRouter);
 
 // 404 handler
 app.use("*", (req, res, next) => {
-  res.status(404);
-  next("Not Found");
+  if (req.baseUrl.match(/\/api-docs/) || req.baseUrl.match(/\/api-spec/)) {
+    next();
+  } else {
+    res.status(404);
+    next("Not Found");
+  }
 });
 
 // Error handler

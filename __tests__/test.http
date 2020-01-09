@@ -1,7 +1,7 @@
 @hostname = localhost
 @port = 3000
 @host = {{hostname}}:{{port}}
-@session = 55f3f1f1-49c5-4200-8dcf-0e270c143ca9
+@session = 6ee248d1-72f3-4890-af5c-ca9ea6ce4214
 
 ###
 
@@ -15,6 +15,16 @@ authorization: Basic bad pw
 ###
 
 GET https://{{host}}/404test
+authorization: Basic changeme ch@ngeM3
+
+###
+
+GET https://{{host}}/api-docs/
+authorization: Basic changeme ch@ngeM3
+
+###
+
+GET https://{{host}}/api-spec/
 authorization: Basic changeme ch@ngeM3
 
 ###
@@ -53,5 +63,15 @@ authorization: Basic changeme ch@ngeM3
 
 ###
 
+GET https://{{host}}/processes/{{session}}/badroute
+authorization: Basic changeme ch@ngeM3
+
+###
+
 POST https://{{host}}/processes/{{session}}/stop
+authorization: Basic changeme ch@ngeM3
+
+###
+
+POST https://{{host}}/processes/badid/stop
 authorization: Basic changeme ch@ngeM3
