@@ -3,7 +3,9 @@ const swaggerUi = require("swagger-ui-express");
 const OasSpec = require("./oas-spec.json");
 
 const setup = app => {
-  expressOasGenerator.init(app, OasSpec);
+  if (process.env.NODE_ENV !== "production") {
+    expressOasGenerator.init(app, OasSpec);
+  }
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(OasSpec));
 };
 

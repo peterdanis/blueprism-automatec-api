@@ -30,7 +30,7 @@ app.use("/processes", processesRouter);
 
 // 404 handler
 app.use("*", (req, res, next) => {
-  if (req.baseUrl.match(/\/api-docs/) || req.baseUrl.match(/\/api-spec/)) {
+  if (req.baseUrl.match(/\/api-spec/)) {
     next();
   } else {
     res.status(404);
