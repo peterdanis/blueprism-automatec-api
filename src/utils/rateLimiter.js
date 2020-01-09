@@ -2,9 +2,9 @@ const rateLimit = require("express-rate-limit");
 
 const limiter = rateLimit({
   headers: false,
-  max: 100,
-  message: { message: "Too many requests, please try again later." },
-  windowMs: 5 * 60 * 1000,
+  max: process.env.BP_API_RATE_LIMIT || 200,
+  message: { error: "Too many requests, please try again later." },
+  windowMs: 1 * 60 * 1000,
 });
 
 const setup = app => {
