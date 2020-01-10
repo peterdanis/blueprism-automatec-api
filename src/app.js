@@ -1,10 +1,10 @@
 const express = require("express");
+const miscRouter = require("./routes/misc");
 const processesRouter = require("./routes/processes");
 const setupAuth = require("./utils/auth");
 const setupLog = require("./utils/logging");
 const setupRateLimiter = require("./utils/rateLimiter");
 const setupSwagger = require("./utils/swagger.js");
-const { version } = require("../package.json");
 
 const app = express();
 
@@ -21,11 +21,8 @@ app.disable("x-powered-by");
 // Use JSON middleware
 app.use(express.json());
 
-app.get("/version", (req, res) => {
-  res.json({ version });
-});
-
-// Processes router handler
+// Route handlers
+app.use("/", miscRouter);
 app.use("/processes", processesRouter);
 
 // 404 handler

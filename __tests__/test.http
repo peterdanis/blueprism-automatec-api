@@ -63,3 +63,9 @@ authorization: Basic rpa p@ssword#1
 
 POST https://{{host}}/processes/badid/stop
 authorization: Basic rpa p@ssword#1
+
+###
+
+POST https://{{host}}/logoff
+authorization: Basic rpa p@ssword#1
+
