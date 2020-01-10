@@ -1,15 +1,16 @@
 const path = require("path");
 const execFile = require("util").promisify(require("child_process").execFile); // eslint-disable-line security/detect-child-process
 
+// Variables
 const {
   BP_API_DBCONNAME,
-  BP_API_EXE_PATH,
+  BP_API_EXE_DIR,
   BP_API_PASSWORD,
   BP_API_SSO,
   BP_API_USERNAME,
 } = process.env;
 const dir =
-  BP_API_EXE_PATH ||
+  BP_API_EXE_DIR ||
   "C:\\Program Files\\Blue Prism Limited\\Blue Prism Automate";
 const bin = path.join(dir, "AutomateC.exe");
 const standardArgs = [
@@ -22,6 +23,7 @@ const standardArgs = [
 const idRegexp = new RegExp(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
 const nameRegexp = new RegExp(/^[\w ]+$/);
 
+// Helper functions
 const throwError = (message, statusCode) => {
   const error = new Error(message);
   error.statusCode = statusCode;
@@ -40,6 +42,7 @@ const execAutomateC = async (command, sessionIdOrProcessName, match) => {
   return stdout;
 };
 
+// Main exported function
 // eslint-disable-next-line consistent-return
 const runAutomateC = async (action, sessionIdOrProcessName) => {
   try {
