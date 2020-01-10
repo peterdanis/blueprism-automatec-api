@@ -14,9 +14,9 @@ router.post("/", async (req, res, next) => {
 });
 
 // Get status of specific process
-router.get("/:id", async (req, res, next) => {
+router.get("/:sessionId", async (req, res, next) => {
   try {
-    const result = await automatec("getStatus", req.params.id);
+    const result = await automatec("getStatus", req.params.sessionId);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -24,9 +24,9 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // Stop specific process
-router.post("/:id/stop", async (req, res, next) => {
+router.post("/:sessionId/stop", async (req, res, next) => {
   try {
-    const result = await automatec("stopProcess", req.params.id);
+    const result = await automatec("stopProcess", req.params.sessionId);
     res.status(202).json(result);
   } catch (error) {
     next(error);

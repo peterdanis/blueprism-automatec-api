@@ -4,19 +4,11 @@
     "version": "0.1.0",
     "description": "[Specification JSON](/api-spec)"
   },
-  "security": {
-    "UserSecurity": []
-  },
-  "securityDefinition": {
-    "UserSecurity": {
-      "type": "basic"
-    }
-  },
   "paths": {
     "/version": {
       "get": {
         "summary": "Returns API version",
-        "description": "Returns version of currently running API server.",
+        "consumes": ["application/json"],
         "parameters": [],
         "responses": {
           "200": {
@@ -31,13 +23,13 @@
             }
           }
         },
+        "description": "Returns version of currently running API server.",
         "produces": ["application/json"]
       }
     },
     "/processes": {
       "post": {
         "summary": "Starts a new process",
-        "description": "Requests starting new process. Process name must be supplied",
         "consumes": ["application/json"],
         "parameters": [
           {
@@ -79,13 +71,14 @@
             }
           }
         },
+        "description": "Requests starting new process. Process name must be supplied",
         "produces": ["application/json"]
       }
     },
     "/processes/{sessionId}": {
       "get": {
         "summary": "Returns status of the process",
-        "description": "Returns status of the process supplied in the URL path. Session ID (usually obtained when starting the process) must be supplied.",
+        "consumes": ["application/json"],
         "parameters": [
           {
             "name": "sessionId",
@@ -118,26 +111,16 @@
                 }
               }
             }
-          },
-          "500": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "example": "Cannot read property 'match' of undefined"
-                }
-              }
-            }
           }
         },
+        "description": "Returns status of the process supplied in the URL path. Session ID (usually obtained when starting the process) must be supplied.",
         "produces": ["application/json"]
       }
     },
     "/processes/{sessionId}/stop": {
       "post": {
         "summary": "Requests process to stop",
-        "description": "Requests  process supplied in the URL path to stop. Session ID (usually obtained when starting the process) must be supplied.",
+        "consumes": ["application/json"],
         "parameters": [
           {
             "name": "sessionId",
@@ -170,21 +153,19 @@
                 }
               }
             }
-          },
-          "500": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "example": "Cannot read property 'match' of undefined"
-                }
-              }
-            }
           }
         },
+        "description": "Requests  process supplied in the URL path to stop. Session ID (usually obtained when starting the process) must be supplied.",
         "produces": ["application/json"]
       }
+    }
+  },
+  "security": {
+    "UserSecurity": []
+  },
+  "securityDefinition": {
+    "UserSecurity": {
+      "type": "basic"
     }
   },
   "swagger": "2.0"
