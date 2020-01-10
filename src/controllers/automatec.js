@@ -9,31 +9,37 @@ const args = ["/sso", "/dbconname", "Development"];
 const idRegexp = new RegExp(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
 const nameRegexp = new RegExp(/^[\w ]+$/);
 
+const throwError = (message, statusCode) => {
+  const customError = new Error(message);
+  customError.statusCode = statusCode;
+  throw customError;
+};
+
+// eslint-disable-next-line consistent-return
 const runAutomateC = async (action, sessionIdOrProcessName) => {
   let commandResult;
-  const customError = new Error();
 
   try {
     switch (action) {
       case "getStatus":
         if (!idRegexp.test(sessionIdOrProcessName)) {
-          customError.statusCode = 400;
-          customError.message =
-            "Supplied session ID is not a valid session identifier. The correct format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
-          throw customError;
+          throwError(
+            "Supplied session ID is not a valid session identifier. The correct format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            400,
+          );
         }
         commandResult = await execFile(bin, [
           ...args,
           "/status",
           sessionIdOrProcessName,
         ]);
-        return { status: commandResult.stdout.match(/Status:([a-zA-Z]*)/i)[1] };
+        return {
+          status: commandResult.stdout.match(/Status:([a-zA-Z]*)/i)[1],
+        };
 
       case "startProcess":
         if (!nameRegexp.test(sessionIdOrProcessName)) {
-          customError.statusCode = 400;
-          customError.message = "Incorrect process name supplied";
-          throw customError;
+          throwError("Incorrect process name supplied", 400);
         }
         commandResult = await execFile(bin, [
           ...args,
@@ -46,65 +52,64 @@ const runAutomateC = async (action, sessionIdOrProcessName) => {
 
       case "stopProcess":
         if (!idRegexp.test(sessionIdOrProcessName)) {
-          customError.statusCode = 400;
-          customError.message =
-            "Supplied session ID is not a valid session identifier. The correct format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
-          throw customError;
+          throwError(
+            "Supplied session ID is not a valid session identifier. The correct format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            400,
+          );
         }
         commandResult = await execFile(bin, [
           ...args,
           "/requeststop",
           sessionIdOrProcessName,
         ]);
-        return { status: "Stop requested" };
+        return {
+          status: "Stop requested",
+        };
 
       default:
-        customError.message =
-          "Action for this route is not implemented, check server <-> bin file integration part";
-        throw customError;
+        throwError(
+          "Action for this route is not implemented, check server <-> bin file integration part",
+          501,
+        );
+        break;
     }
   } catch (error) {
-    const { code, message, stdout = "" } = error;
+    const { code, stdout = "" } = error;
 
     switch (true) {
       case code === "ENOENT":
-        customError.message = "AutomateC.exe not found, check server config";
+        throwError("AutomateC.exe not found, check server config", 500);
         break;
 
       case stdout.match(/The session .* is not running/) !== null:
-        customError.statusCode = 400;
-        customError.message = "Proccess is not running";
+        throwError("Proccess is not running", 400);
         break;
 
       case stdout.match(/No information found for that session/) !== null:
-        customError.statusCode = 400;
-        customError.message = "No information found for that session";
+        throwError("No information found for that session", 400);
         break;
 
       case stdout.match(/Could not find the session with the ID\/number/) !==
         null:
-        customError.statusCode = 400;
-        customError.message = "Could not find the session with the ID/number";
+        throwError("Could not find the session with the ID/number", 400);
         break;
 
       case stdout.match(/process .* does not exist/) !== null:
-        customError.statusCode = 400;
-        customError.message = "Process does not exist";
+        throwError("Process does not exist", 400);
         break;
 
       case stdout.match(
         /can not create session to run process - The maximum number of concurrent sessions permitted by the current license would be exceeded/,
       ) !== null:
-        customError.statusCode = 400;
-        customError.message =
-          "The maximum number of concurrent sessions permitted by the current license would be exceeded";
+        throwError(
+          "The maximum number of concurrent sessions permitted by the current license would be exceeded",
+          400,
+        );
         break;
 
       default:
-        customError.message = stdout || message;
-        break;
+        throw error;
     }
-    throw customError;
   }
 };
 
