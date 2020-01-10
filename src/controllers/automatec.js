@@ -1,18 +1,31 @@
 const path = require("path");
 const execFile = require("util").promisify(require("child_process").execFile); // eslint-disable-line security/detect-child-process
 
+const {
+  BP_API_DBCONNAME,
+  BP_API_EXE_PATH,
+  BP_API_PASSWORD,
+  BP_API_SSO,
+  BP_API_USERNAME,
+} = process.env;
 const dir =
-  process.env.BP_API_EXE_PATH ||
+  BP_API_EXE_PATH ||
   "C:\\Program Files\\Blue Prism Limited\\Blue Prism Automate";
 const bin = path.join(dir, "AutomateC.exe");
-const standardArgs = ["/sso", "/dbconname", "Development"];
+const standardArgs = [
+  "/dbconname",
+  BP_API_DBCONNAME,
+  ...(BP_API_SSO === "true"
+    ? ["/sso"]
+    : ["/user", BP_API_USERNAME, BP_API_PASSWORD]),
+];
 const idRegexp = new RegExp(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
 const nameRegexp = new RegExp(/^[\w ]+$/);
 
 const throwError = (message, statusCode) => {
-  const customError = new Error(message);
-  customError.statusCode = statusCode;
-  throw customError;
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  throw error;
 };
 
 const execAutomateC = async (command, sessionIdOrProcessName, match) => {
@@ -72,11 +85,18 @@ const runAutomateC = async (action, sessionIdOrProcessName) => {
         break;
     }
   } catch (error) {
-    const { code, stdout = "" } = error;
+    const { code, message = "", stdout = "" } = error;
 
     switch (true) {
       case code === "ENOENT":
         throwError("AutomateC.exe not found, check server config", 500);
+        break;
+
+      case message.match(/Command failed:/) !== null:
+        throwError(
+          `Command failed. Details: ${stdout.replace(/(\n)|(\r)/g, "")}`,
+          500,
+        );
         break;
 
       case stdout.match(/The session .* is not running/) !== null:
