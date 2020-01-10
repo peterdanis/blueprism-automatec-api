@@ -5,7 +5,7 @@ const dir =
   process.env.BP_API_EXE_PATH ||
   "C:\\Program Files\\Blue Prism Limited\\Blue Prism Automate";
 const bin = path.join(dir, "AutomateC.exe");
-const args = ["/sso", "/dbconname", "Development"];
+const standardArgs = ["/sso", "/dbconname", "Development"];
 const idRegexp = new RegExp(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
 const nameRegexp = new RegExp(/^[\w ]+$/);
 
@@ -15,10 +15,20 @@ const throwError = (message, statusCode) => {
   throw customError;
 };
 
+const execAutomateC = async (command, sessionIdOrProcessName, match) => {
+  const { stdout } = await execFile(bin, [
+    ...standardArgs,
+    command,
+    sessionIdOrProcessName,
+  ]);
+  if (match) {
+    return stdout.match(match)[1];
+  }
+  return stdout;
+};
+
 // eslint-disable-next-line consistent-return
 const runAutomateC = async (action, sessionIdOrProcessName) => {
-  let commandResult;
-
   try {
     switch (action) {
       case "getStatus":
@@ -28,27 +38,21 @@ const runAutomateC = async (action, sessionIdOrProcessName) => {
             400,
           );
         }
-        commandResult = await execFile(bin, [
-          ...args,
+        return await execAutomateC(
           "/status",
           sessionIdOrProcessName,
-        ]);
-        return {
-          status: commandResult.stdout.match(/Status:([a-zA-Z]*)/i)[1],
-        };
+          /Status:([a-zA-Z]*)/i,
+        );
 
       case "startProcess":
         if (!nameRegexp.test(sessionIdOrProcessName)) {
           throwError("Incorrect process name supplied", 400);
         }
-        commandResult = await execFile(bin, [
-          ...args,
+        return await execAutomateC(
           "/run",
           sessionIdOrProcessName,
-        ]);
-        return {
-          sessionId: commandResult.stdout.match(/session:([0-9a-z-]*)/i)[1],
-        };
+          /session:([0-9a-z-]*)/i,
+        );
 
       case "stopProcess":
         if (!idRegexp.test(sessionIdOrProcessName)) {
@@ -57,14 +61,8 @@ const runAutomateC = async (action, sessionIdOrProcessName) => {
             400,
           );
         }
-        commandResult = await execFile(bin, [
-          ...args,
-          "/requeststop",
-          sessionIdOrProcessName,
-        ]);
-        return {
-          status: "Stop requested",
-        };
+        await execAutomateC("/requeststop", sessionIdOrProcessName);
+        return "Stop requested";
 
       default:
         throwError(

@@ -6,8 +6,8 @@ const router = express.Router();
 // Start process
 router.post("/", async (req, res, next) => {
   try {
-    const result = await automatec("startProcess", req.body.process);
-    res.status(201).json(result);
+    const sessionId = await automatec("startProcess", req.body.process);
+    res.status(201).json({ sessionId });
   } catch (error) {
     next(error);
   }
@@ -16,8 +16,8 @@ router.post("/", async (req, res, next) => {
 // Get status of specific process
 router.get("/:sessionId", async (req, res, next) => {
   try {
-    const result = await automatec("getStatus", req.params.sessionId);
-    res.status(200).json(result);
+    const status = await automatec("getStatus", req.params.sessionId);
+    res.status(200).json({ status });
   } catch (error) {
     next(error);
   }
@@ -26,8 +26,8 @@ router.get("/:sessionId", async (req, res, next) => {
 // Stop specific process
 router.post("/:sessionId/stop", async (req, res, next) => {
   try {
-    const result = await automatec("stopProcess", req.params.sessionId);
-    res.status(202).json(result);
+    const status = await automatec("stopProcess", req.params.sessionId);
+    res.status(202).json({ status });
   } catch (error) {
     next(error);
   }
