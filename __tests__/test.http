@@ -1,7 +1,7 @@
 @hostname = localhost
 @port = 3000
 @host = {{hostname}}:{{port}}
-@session = 6ee248d1-72f3-4890-af5c-ca9ea6ce4214
+@session = 28aa4c1f-27be-4531-8778-9963eec9b48c
 
 ###
 
@@ -46,14 +46,6 @@ POST https://{{host}}/processes http/1.1
 authorization: Basic changeme ch@ngeM3
 content-type: application/json
 
-{"process": "Logout"}
-
-###
-
-POST https://{{host}}/processes http/1.1
-authorization: Basic changeme ch@ngeM3
-content-type: application/json
-
 {"process": "Test process"}
 
 ###
@@ -61,10 +53,6 @@ content-type: application/json
 GET https://{{host}}/processes/{{session}}
 authorization: Basic changeme ch@ngeM3
 
-###
-
-GET https://{{host}}/processes/{{session}}/badroute
-authorization: Basic changeme ch@ngeM3
 
 ###
 
