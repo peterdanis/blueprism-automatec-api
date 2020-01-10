@@ -15,27 +15,27 @@ authorization: Basic bad pw
 ###
 
 GET https://{{host}}/404test
-authorization: Basic changeme ch@ngeM3
+authorization: Basic rpa p@ssword#1
 
 ###
 
 GET https://{{host}}/api-docs/
-authorization: Basic changeme ch@ngeM3
+authorization: Basic rpa p@ssword#1
 
 ###
 
 GET https://{{host}}/api-spec/
-authorization: Basic changeme ch@ngeM3
+authorization: Basic rpa p@ssword#1
 
 ###
 
 GET https://{{host}}/version
-authorization: Basic changeme ch@ngeM3
+authorization: Basic rpa p@ssword#1
 
 ###
 
 POST https://{{host}}/processes http/1.1
-authorization: Basic changeme ch@ngeM3
+authorization: Basic rpa p@ssword#1
 content-type: application/json
 
 {"process": "Login"}
@@ -43,7 +43,7 @@ content-type: application/json
 ###
 
 POST https://{{host}}/processes http/1.1
-authorization: Basic changeme ch@ngeM3
+authorization: Basic rpa p@ssword#1
 content-type: application/json
 
 {"process": "Test process"}
@@ -51,15 +51,15 @@ content-type: application/json
 ###
 
 GET https://{{host}}/processes/{{session}}
-authorization: Basic changeme ch@ngeM3
+authorization: Basic rpa p@ssword#1
 
 
 ###
 
 POST https://{{host}}/processes/{{session}}/stop
-authorization: Basic changeme ch@ngeM3
+authorization: Basic rpa p@ssword#1
 
 ###
 
 POST https://{{host}}/processes/badid/stop
-authorization: Basic changeme ch@ngeM3
+authorization: Basic rpa p@ssword#1
