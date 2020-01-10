@@ -103,7 +103,7 @@ const runAutomateC = async (action, sessionIdOrProcessName) => {
         break;
 
       case stdout.match(/The session .* is not running/) !== null:
-        throwError("Proccess is not running", 400);
+        throwError("Process is not running", 400);
         break;
 
       case stdout.match(/No information found for that session/) !== null:
