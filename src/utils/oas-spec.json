@@ -27,6 +27,27 @@
         "produces": ["application/json"]
       }
     },
+    "/logoff": {
+      "post": {
+        "summary": "Terminates running process and logs off",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "Logging off"
+                }
+              }
+            }
+          }
+        },
+        "description": "Terminates running process (robot) and logs off currently logged in user",
+        "produces": ["application/json"]
+      }
+    },
     "/processes": {
       "post": {
         "summary": "Starts a new process",
@@ -39,10 +60,37 @@
             "schema": {
               "type": "object",
               "example": {
-                "process": "Login"
+                "process": "Test process",
+                "inputs": [
+                  {
+                    "@name": "Time to run",
+                    "@type": "text",
+                    "@value": "20"
+                  }
+                ]
               },
               "properties": {
-                "process": "string"
+                "inputs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "@name": {
+                        "type": "string"
+                      },
+                      "@value": {
+                        "type": "string"
+                      },
+                      "@type": {
+                        "type": "string",
+                        "enum": ["text"]
+                      }
+                    }
+                  }
+                },
+                "process": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -66,6 +114,17 @@
                 "error": {
                   "type": "string",
                   "example": "The maximum number of concurrent sessions permitted by the current license would be exceeded"
+                }
+              }
+            }
+          },
+          "500": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Could not connect to resource"
                 }
               }
             }
