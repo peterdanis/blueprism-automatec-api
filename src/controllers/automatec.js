@@ -122,13 +122,6 @@ const runAutomateC = async (command, argsObject) => {
         throwError("AutomateC.exe not found, check server config", 500);
         break;
 
-      case message.match(/Command failed:/) !== null:
-        throwError(
-          `Command failed. Details: ${stdout.replace(/(\n)|(\r)/g, "")}`,
-          500,
-        );
-        break;
-
       case stdout.match(/The session .* is not running/) !== null:
         throwError("Process is not running", 400);
         break;
@@ -152,6 +145,13 @@ const runAutomateC = async (command, argsObject) => {
         throwError(
           "The maximum number of concurrent sessions permitted by the current license would be exceeded",
           400,
+        );
+        break;
+
+      case message.match(/Command failed:/) !== null:
+        throwError(
+          `Command failed. Details: ${stdout.replace(/(\n)|(\r)/g, "")}`,
+          500,
         );
         break;
 
