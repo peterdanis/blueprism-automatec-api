@@ -143,9 +143,13 @@ const runAutomateC = async (command, argsObject) => {
         /can not create session to run process - The maximum number of concurrent sessions permitted by the current license would be exceeded/,
       ) !== null:
         throwError(
-          "The maximum number of concurrent sessions permitted by the current license would be exceeded",
+          "The maximum number of concurrent sessions permitted by the current BluePrism license would be exceeded",
           400,
         );
+        break;
+
+      case stdout.match(/could not connect to resource/) !== null:
+        throwError("Could not connect to resource", 500);
         break;
 
       case message.match(/Command failed:/) !== null:
