@@ -10,7 +10,18 @@ router.get("/version", (req, res) => {
 
 router.post("/logoff", async (req, res, next) => {
   try {
-    await execFile("taskkill", ["/IM", "automate.exe"]);
+    await execFile("taskkill", ["/IM", "automate.exe", "/F"]);
+  } catch (error) {
+    if (
+      !error.message ||
+      !error.message.match(/process "automate.exe" not found/)
+    ) {
+      next(error);
+      return;
+    }
+  }
+
+  try {
     await execFile("shutdown", ["/L", "/F"]);
     res.status(202).json({ status: "Logging off" });
   } catch (error) {
