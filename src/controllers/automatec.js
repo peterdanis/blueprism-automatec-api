@@ -1,5 +1,6 @@
 const path = require("path");
 const execFile = require("util").promisify(require("child_process").execFile); // eslint-disable-line security/detect-child-process
+const xmlBuilder = require("xmlbuilder");
 
 // Variables
 const {
@@ -13,13 +14,6 @@ const dir =
   BP_API_EXE_DIR ||
   "C:\\Program Files\\Blue Prism Limited\\Blue Prism Automate";
 const bin = path.join(dir, "AutomateC.exe");
-const standardArgs = [
-  "/dbconname",
-  BP_API_DBCONNAME,
-  ...(BP_API_SSO === "true"
-    ? ["/sso"]
-    : ["/user", BP_API_USERNAME, BP_API_PASSWORD]),
-];
 const idRegexp = new RegExp(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
 const nameRegexp = new RegExp(/^[\w ]+$/);
 
@@ -30,12 +24,23 @@ const throwError = (message, statusCode) => {
   throw error;
 };
 
-const execAutomateC = async (command, sessionIdOrProcessName, match) => {
-  const { stdout } = await execFile(bin, [
-    ...standardArgs,
+const execAutomateC = async (
+  command,
+  sessionIdOrProcessName,
+  match,
+  startupParams,
+) => {
+  const args = [
+    "/dbconname",
+    BP_API_DBCONNAME,
+    ...(BP_API_SSO === "true"
+      ? ["/sso"]
+      : ["/user", BP_API_USERNAME, BP_API_PASSWORD]),
     command,
     sessionIdOrProcessName,
-  ]);
+    ...(startupParams ? ["/startp", startupParams] : []),
+  ];
+  const { stdout } = await execFile(bin, args);
   if (match) {
     return stdout.match(match)[1];
   }
@@ -44,40 +49,62 @@ const execAutomateC = async (command, sessionIdOrProcessName, match) => {
 
 // Main exported function
 // eslint-disable-next-line consistent-return
-const runAutomateC = async (action, sessionIdOrProcessName) => {
+const runAutomateC = async (command, argsObject) => {
+  const { sessionId, process, inputs } = argsObject;
   try {
-    switch (action) {
+    switch (command) {
       case "getStatus":
-        if (!idRegexp.test(sessionIdOrProcessName)) {
+        if (!idRegexp.test(sessionId)) {
           throwError(
             "Supplied session ID is not a valid session identifier. The correct format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
             400,
           );
         }
-        return await execAutomateC(
-          "/status",
-          sessionIdOrProcessName,
-          /Status:([a-zA-Z]*)/i,
-        );
+        return await execAutomateC("/status", sessionId, /Status:([a-zA-Z]*)/i);
 
       case "startProcess":
-        if (!nameRegexp.test(sessionIdOrProcessName)) {
+        if (!nameRegexp.test(process)) {
           throwError("Incorrect process name supplied", 400);
         }
+
+        // Inputs checks
+        if (Array.isArray(inputs)) {
+          inputs.forEach(input => {
+            if (
+              typeof input["@name"] !== "string" ||
+              typeof input["@value"] !== "string" ||
+              input["@type"] !== "text"
+            ) {
+              throwError(
+                "Each item in Inputs array must have '@name', '@value' and '@type' properties. In addition, '@type' must be 'text'",
+                400,
+              );
+            }
+          });
+        } else {
+          throwError("Inputs must be an array", 400);
+        }
+
+        // eslint-disable-next-line no-case-declarations
+        const xml = xmlBuilder
+          .create({ inputs: { input: inputs } }, { headless: true })
+          .end();
+
         return await execAutomateC(
           "/run",
-          sessionIdOrProcessName,
+          process,
           /session:([0-9a-z-]*)/i,
+          xml,
         );
 
       case "stopProcess":
-        if (!idRegexp.test(sessionIdOrProcessName)) {
+        if (!idRegexp.test(sessionId)) {
           throwError(
             "Supplied session ID is not a valid session identifier. The correct format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
             400,
           );
         }
-        await execAutomateC("/requeststop", sessionIdOrProcessName);
+        await execAutomateC("/requeststop", sessionId);
         return "Stop requested";
 
       default:

@@ -1,65 +1,61 @@
 @hostname = localhost
 @port = 3000
 @host = {{hostname}}:{{port}}
-@session = 28aa4c1f-27be-4531-8778-9963eec9b48c
+@session = fcb41d82-8e04-4c35-b624-850126d92f2d
 
-###
+### Missing auth example
 
 GET https://{{host}}/missingauth
 
-###
-
-GET https://{{host}}/badauth
-authorization: Basic bad pw
-
-###
+### 404 example
 
 GET https://{{host}}/404test
 authorization: Basic rpa p@ssword#1
 
-###
+### Link to swagger
 
 GET https://{{host}}/api-docs/
 authorization: Basic rpa p@ssword#1
 
-###
+### Link to API spec JSON file (only in development)
 
 GET https://{{host}}/api-spec/
 authorization: Basic rpa p@ssword#1
 
-###
+### Get API server version
 
 GET https://{{host}}/version
 authorization: Basic rpa p@ssword#1
 
-###
+
+### Start test process with one input parameter
 
 POST https://{{host}}/processes http/1.1
 authorization: Basic rpa p@ssword#1
 content-type: application/json
 
-{"process": "Login"}
-
-###
-
-POST https://{{host}}/processes http/1.1
-authorization: Basic rpa p@ssword#1
-content-type: application/json
-
-{"process": "Test process"}
+{
+  "process": "Test process",
+  "inputs": [
+    {
+      "@name": "Time to run",
+      "@type": "text",
+      "@value": "20"
+    }
+  ]
+}
 
 ###
 
 GET https://{{host}}/processes/{{session}}
 authorization: Basic rpa p@ssword#1
 
-
 ###
 
 POST https://{{host}}/processes/{{session}}/stop
 authorization: Basic rpa p@ssword#1
 
-###
+### Example with invalid session ID
 
 POST https://{{host}}/processes/badid/stop
 authorization: Basic rpa p@ssword#1
