@@ -10,7 +10,8 @@ router.get("/version", (req, res) => {
 
 router.post("/logoff", async (req, res, next) => {
   try {
-    await execFile("logoff");
+    await execFile("taskkill", ["/IM", "automate.exe"]);
+    await execFile("shutdown", ["/L", "/F"]);
     res.status(202).json({ status: "Logging off" });
   } catch (error) {
     next(error);
