@@ -50,7 +50,7 @@ const execAutomateC = async (
 // Main exported function
 // eslint-disable-next-line consistent-return
 const runAutomateC = async (command, argsObject) => {
-  const { sessionId, process, inputs } = argsObject;
+  const { sessionId, process, inputs = [] } = argsObject;
   try {
     switch (command) {
       case "getStatus":
