@@ -6,8 +6,15 @@ const http = require("http");
 const https = require("https");
 let debug = require("debug")(`express:${packageJson.name}`);
 
-const { env } = process;
-const port = env.BP_API_PORT || "3000";
+const {
+  BP_API_CERT_FILE_NAME,
+  BP_API_CERT_PW,
+  BP_API_HTTPS,
+  BP_API_IP,
+  BP_API_PORT,
+  NODE_ENV,
+} = process.env;
+const port = BP_API_PORT || "3000";
 let server;
 
 // Use console.log if not debugging
@@ -15,17 +22,17 @@ if (!debug.enabled) {
   debug = console.log; // eslint-disable-line no-console
 }
 debug(`Version: ${packageJson.version}`);
-debug(`Env: ${env.NODE_ENV}`);
+debug(`Env: ${NODE_ENV}`);
 debug(
   "Note: configuration can be done via .env file in this directory and/or via env variables",
 );
 
 // Create HTTP or HTTPS server.
-if (env.BP_API_HTTPS === "true") {
+if (BP_API_HTTPS === "true") {
   try {
     const options = {
-      passphrase: env.BP_API_CERT_PW,
-      pfx: fs.readFileSync(env.BP_API_CERT_FILE_NAME), // eslint-disable-line security/detect-non-literal-fs-filename
+      passphrase: BP_API_CERT_PW,
+      pfx: fs.readFileSync(BP_API_CERT_FILE_NAME), // eslint-disable-line security/detect-non-literal-fs-filename
     };
     server = https.createServer(options, app);
   } catch (error) {
@@ -52,10 +59,10 @@ server.on("error", error => {
 server.on("listening", () => {
   const addr = server.address();
   debug(
-    `Listening on ${addr.family} address ${env.BP_API_IP}, port ${
+    `Listening on ${addr.family} address ${BP_API_IP}, port ${
       addr.port
-    }, using ${env.BP_API_HTTPS ? "HTTPS" : "HTTP"}`,
+    }, using ${BP_API_HTTPS ? "HTTPS" : "HTTP"}`,
   );
 });
 
-server.listen(port, env.BP_API_IP);
+server.listen(port, BP_API_IP);
