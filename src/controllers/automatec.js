@@ -123,7 +123,7 @@ const runAutomateC = async (command, argsObject) => {
         break;
 
       case stdout.match(/The session .* is not running/) !== null:
-        throwError("Process is not running", 400);
+        throwError("Process is not running", 409);
         break;
 
       case stdout.match(/No information found for that session/) !== null:
@@ -144,12 +144,12 @@ const runAutomateC = async (command, argsObject) => {
       ) !== null:
         throwError(
           "The maximum number of concurrent sessions permitted by the current BluePrism license would be exceeded",
-          400,
+          503,
         );
         break;
 
       case stdout.match(/could not connect to resource/) !== null:
-        throwError("Could not connect to resource", 500);
+        throwError("Could not connect to resource", 503);
         break;
 
       case message.match(/Command failed:/) !== null:
