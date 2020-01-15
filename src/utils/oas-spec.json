@@ -128,6 +128,17 @@
                 }
               }
             }
+          },
+          "503": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "The maximum number of concurrent sessions permitted by the current license would be exceeded"
+                }
+              }
+            }
           }
         },
         "description": "Requests starting new process. Process name must be supplied",
@@ -209,6 +220,17 @@
                 "error": {
                   "type": "string",
                   "example": "Could not find the session with the ID/number"
+                }
+              }
+            }
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Process is not running"
                 }
               }
             }
