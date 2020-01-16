@@ -62,6 +62,6 @@ authorization: Basic rpa p@ssword#1
 
 ###
 
-POST https://{{host}}/logoff
+POST https://{{host}}/reset
 authorization: Basic rpa p@ssword#1
 

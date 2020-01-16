@@ -27,24 +27,14 @@
         "produces": ["application/json"]
       }
     },
-    "/logoff": {
+    "/reset": {
       "post": {
-        "summary": "Terminates running process and logs off",
+        "summary": "Reset the machine",
         "parameters": [],
         "responses": {
-          "202": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "Logging off"
-                }
-              }
-            }
-          }
+          "200": {}
         },
-        "description": "Terminates running process (robot) and logs off currently logged in user",
+        "description": "Tries to reset the machine by killing BP process (automate.exe), forcibly logging off all users and restarting BP Login Agent service",
         "produces": ["application/json"]
       }
     },

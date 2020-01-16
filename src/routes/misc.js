@@ -17,7 +17,8 @@ router.get("/version", (req, res) => {
   res.json({ version });
 });
 
-router.post("/logoff", async (req, res, next) => {
+router.post("/reset", async (req, res, next) => {
+  // Kill BP process
   try {
     await exec("taskkill /IM automate.exe /F");
   } catch (error) {
@@ -32,14 +33,49 @@ router.post("/logoff", async (req, res, next) => {
     }
   }
 
+  // Forcibly logoff all users
   try {
-    // Get all sessions and logoff them
     const { stdout } = await exec("qwinsta");
     await Promise.all(stdout.match(/[^\r\n]+/g).map(logoff));
-    res.status(202).json({ status: "Logging off" });
   } catch (error) {
     next(error);
+    return;
   }
+
+  // Restart Login Agent service
+  try {
+    await exec("net stop loginagent");
+  } catch (error) {
+    if (
+      error.message &&
+      error.message.match(
+        /(The service name is invalid)|(service is not started)/,
+      )
+    ) {
+      // Ignore error, Login Agent service does not have to be used or the service might be alerady stopped
+    } else {
+      next(error);
+      return;
+    }
+  }
+
+  try {
+    await exec("net start loginagent");
+  } catch (error) {
+    if (
+      error.message &&
+      error.message.match(
+        /(The service name is invalid)|(service has already been started)/,
+      )
+    ) {
+      // Ignore error, Login Agent service does not have to be used or the service might be alerady running
+    } else {
+      next(error);
+      return;
+    }
+  }
+
+  res.status(200).end();
 });
 
 module.exports = router;
