@@ -63,6 +63,10 @@ const runAutomateC = async (command, argsObject) => {
         return await execAutomateC("/status", sessionId, /Status:([a-zA-Z]*)/i);
 
       case "startProcess":
+        if (!process) {
+          throwError("Process name missing", 400);
+        }
+
         if (!nameRegexp.test(process)) {
           throwError("Incorrect process name supplied", 400);
         }
