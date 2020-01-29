@@ -123,7 +123,7 @@ const runAutomateC = async (command, argsObject) => {
 
     switch (true) {
       case code === "ENOENT":
-        throwError("AutomateC.exe not found, check server config", 500);
+        throwError("AutomateC.exe not found, check server config", 502);
         break;
 
       case stdout.match(/The session .* is not running/) !== null:
