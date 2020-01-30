@@ -9,6 +9,7 @@
     "lint": "eslint ./src/**/*.js",
     "start": "nodemon --watch .env --watch src ./src/server.js",
     "test": "jest",
+    "test-cover": "jest --coverage --noStackTrace",
     "test-watch": "jest --watch"
   },
   "engines": {
@@ -41,5 +42,11 @@
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "supertest": "^4.0.2"
+  },
+  "jest": {
+    "coverageReporters": [
+      "json",
+      "text"
+    ]
   }
 }
