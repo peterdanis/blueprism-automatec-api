@@ -7,6 +7,9 @@ const https = require("https");
 let debug = require("debug")(`express:${packageJson.name}`);
 
 const {
+  BP_API_AUTH,
+  BP_API_AUTH_PASSWORD,
+  BP_API_AUTH_USERNAME,
   BP_API_CERT_FILE_NAME,
   BP_API_CERT_PW,
   BP_API_HTTPS,
@@ -14,18 +17,36 @@ const {
   BP_API_PORT,
   NODE_ENV,
 } = process.env;
-const port = BP_API_PORT || "3000";
 let server;
 
 // Use console.log if not debugging
 if (!debug.enabled) {
   debug = console.log; // eslint-disable-line no-console
 }
+
+// Print out some info
+debug(" ");
+debug(`UTC start time: ${new Date(Date.now()).toISOString()}`);
 debug(`Version: ${packageJson.version}`);
 debug(`Env: ${NODE_ENV}`);
+debug(`Auth: ${BP_API_AUTH}`);
 debug(
   "Note: configuration can be done via .env file in this directory and/or via env variables",
 );
+
+// Checks
+if (BP_API_AUTH === "basic") {
+  if (!BP_API_AUTH_USERNAME || !BP_API_AUTH_PASSWORD) {
+    debug(
+      "Error: API authentication username or password are not set. Please set them in .env file",
+    );
+    process.exit(1);
+  }
+} else {
+  debug(
+    "Warning: API authentication not set. Do not use the API without ani authentication in production",
+  );
+}
 
 // Create HTTP or HTTPS server.
 if (BP_API_HTTPS === "true") {
@@ -51,6 +72,7 @@ if (BP_API_HTTPS === "true") {
   }
 } else {
   server = http.createServer(app);
+  debug("Warning: Using HTTPS over HTTP is highly recommended in production");
 }
 
 server.on("error", error => {
@@ -65,4 +87,4 @@ server.on("listening", () => {
   );
 });
 
-server.listen(port, BP_API_IP);
+server.listen(BP_API_PORT, BP_API_IP);
