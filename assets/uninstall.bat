@@ -1,3 +1,5 @@
+@echo off
+
 Blue_Prism_AutomateC_API_installer.exe stop
 Blue_Prism_AutomateC_API_installer.exe uninstall
 Blue_Prism_AutomateC_API_installer.exe status
