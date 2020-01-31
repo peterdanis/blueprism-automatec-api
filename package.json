@@ -10,7 +10,7 @@
     "start": "nodemon --watch .env --watch src ./src/server.js",
     "test": "jest",
     "test-cover": "jest --coverage --noStackTrace",
-    "test-watch": "jest --watch"
+    "test-watch": "jest --watch --noStackTrace"
   },
   "engines": {
     "node": ">=8.0.0"
