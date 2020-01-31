@@ -1,28 +1,15 @@
 require("dotenv").config();
 const app = require("../src/app");
-// eslint-disable-next-line security/detect-child-process
-const cp = require("child_process");
 const request = require("supertest");
+const { execFileMockOnce, execMockOnce } = require("./child_process.mock");
 const { version } = require("../package.json");
+
+jest.mock("child_process");
 
 const {
   BP_API_AUTH_PASSWORD: pw,
   BP_API_AUTH_USERNAME: username,
 } = process.env;
-
-const execFileMock = (err, input) => (...args) => {
-  args.pop()(err, { stdout: input });
-};
-
-const execMock = (err, input) => (...args) => {
-  args.pop()(err, input);
-};
-
-jest.mock("child_process");
-
-// TODO: create mock implementation helpers, will be called multiple times from tests, mock inputs needs to be different
-cp.exec.mockImplementation(execMock(null, {}));
-cp.execFile.mockImplementation(execFileMock(null, "session:testId"));
 
 describe("App", () => {
   test("should require authentication", async () => {
@@ -34,6 +21,13 @@ describe("App", () => {
       .get("/unknownroute")
       .auth(username, pw);
     expect(res.status).toBe(404);
+  });
+  test("should return 500 in case of error", async () => {
+    execFileMockOnce(new Error("test"));
+    const res = await request(app)
+      .get("/processes/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+      .auth(username, pw);
+    expect(res.status).toBe(500);
   });
 
   describe("GET /version", () => {
@@ -54,14 +48,14 @@ describe("App", () => {
       expect(res.status).toBe(400);
     });
     test("should return 400 if inputs are wrong", async () => {
-      // TODO: finish test
+      execFileMockOnce(null, { stdout: "session:x" });
       const res = await request(app)
         .post("/processes")
         .send({
+          inputs: {},
           process: "Test",
         })
         .auth(username, pw);
-      expect(res.body).toBe();
       expect(res.status).toBe(400);
     });
   });
@@ -76,12 +70,13 @@ describe("App", () => {
   });
 
   describe("POST /reset", () => {
-    // TODO: finish test
-    test("TODO", async () => {
+    execMockOnce(null, { stdout: "x" });
+    execMockOnce(null, { stdout: "x" });
+    test("should run successfully", async () => {
       const res = await request(app)
         .post("/reset")
         .auth(username, pw);
-      expect(res.body).toBe();
+      expect(res.status).toBe(200);
     });
   });
 });
