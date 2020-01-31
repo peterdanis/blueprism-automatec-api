@@ -1,6 +1,47 @@
 # Blue Prism AutomateC API
 
+Aim of this project is to provide HTTP based interface for AutomateC.exe, mainly for purpose of connecting Blue Prism to 3rd party scheduler.
+
+### [Download](https://github.com/peterdanis/blueprism-automatec-api/releases/latest)
+
+### [OpenAPI / Swagger spec file](https://github.com/peterdanis/blueprism-automatec-api/blob/master/src/utils/oas-spec.json)
+
+---
+
+## Contributing
+
+Any contributions (new features, bug fixes, bug reports, ideas and others) are welcome.
+
+### How to start / build it on your own from the source code
+
+- Clone this repository
+
+```bash
+git git clone https://github.com/peterdanis/blueprism-automatec-api.git
+cd wrapbox
+```
+
+- Install dependencies
+
+`npm install`
+
+- Build it
+
+`npm run build`
+
+- Start it
+
+`npm run start`
+
+- Debug it
+
+`npm run debug`
+
+---
+
 ## License
+
+MIT License
 
 Copyright (c) 2019 Peter Daniš
 
