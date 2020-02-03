@@ -70,8 +70,6 @@ describe("App", () => {
   });
 
   describe("POST /reset", () => {
-    execMockOnce(null, { stdout: "x" });
-    execMockOnce(null, { stdout: "x" });
     test("should run successfully", async () => {
       const res = await request(app)
         .post("/reset")
