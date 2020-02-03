@@ -60,12 +60,13 @@
   },
   "overrides": [
     {
-      "files": ["**/mocks/*.js", "**/*.spec.js", "**/*.test.js"],
+      "files": ["**/*.mock.js", "**/*.spec.js", "**/*.test.js"],
       "env": {
         "jest": true
       },
       "rules": {
-        "global-require": "off"
+        "global-require": "off",
+        "security/detect-child-process": "off"
       }
     }
   ]

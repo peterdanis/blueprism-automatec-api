@@ -1,4 +1,3 @@
-// eslint-disable-next-line security/detect-child-process
 const cp = require("child_process");
 
 // Both `exec` and `execFile` methods are being used promisified, therefore the intended output must be supplied via closure

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const app = require("../src/app");
 const request = require("supertest");
-const { execFileMockOnce, execMockOnce } = require("./child_process.mock");
+const { execFileMockOnce } = require("./child_process.mock");
 const { version } = require("../package.json");
 
 jest.mock("child_process");
