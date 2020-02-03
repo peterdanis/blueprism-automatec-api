@@ -2,6 +2,40 @@
 
 Aim of this project is to provide HTTP based interface for AutomateC.exe, mainly for purpose of connecting Blue Prism to 3rd party scheduler.
 
+The API server is meant to run on each Runtime resource. Persistance is handled by installing it as Windows service (via [WinSW](https://github.com/kohsuke/winsw)), but you are free to run it by other means.
+
+## Routes
+
+![image](https://user-images.githubusercontent.com/26599181/73657611-e9ce4380-4692-11ea-9791-8c9a70cb5bad.png)
+
+### /version
+
+> To get version of the running API server.
+
+### /reset
+
+> To prepare runtime resource for next bot (e.g. before Login process runs). It will kill any running bots, logout all users (RDP and local console) a stop / start Login Agent service (if used).
+
+### /processes
+
+> To start new process on Runtime resource. Process name and input parameters need to be passed as JSON in the request. On the other hand the response will contain unique session ID, which can be then used to query process status or to request a stop.
+
+### /processes/{sesionId}
+
+> To query process status (e.g. completed, terminated, stopped, etc.). Session ID can be obtained while starting the process via `/process` route.
+
+### /processes/{sessionId}/stop
+
+> To try to stop a running process (if use `IsStopRequested` in your BP process). Session ID can be obtained while starting the process via `/process` route.
+
+## How to run
+
+1. Download and extract the provided zip file on your Runtime resource machine.
+2. Generate self-signed certificate via `generate_selfsigned_certificate.bat` (or provide your own) - needed for HTTPS to work
+3. Change all necessary settings in `.env` file (or alternatively use environment variables)
+4. Run `install.bat` to install the API server as Windows service
+5. Test it out by accessing `/api-docs` route
+
 ### [Download](https://github.com/peterdanis/blueprism-automatec-api/releases/latest)
 
 ### [OpenAPI / Swagger spec file](https://github.com/peterdanis/blueprism-automatec-api/blob/master/src/utils/oas-spec.json)
