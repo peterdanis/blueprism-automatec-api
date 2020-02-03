@@ -1,0 +1,36 @@
+name: Tests
+
+on:
+  push:
+    paths-ignore:
+      - "**.md"
+      - ".dependabot/**"
+      - ".vscode/**"
+    branches-ignore:
+      - "dependabot/**"
+  pull_request:
+    paths-ignore:
+      - "**.md"
+      - ".dependabot/**"
+      - ".vscode/**"
+
+jobs:
+  Test:
+    name: Test with Node ${{ matrix.node-version }}
+    runs-on: windows-latest
+    env:
+      node-version: 12.x
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: npm ci
+      - name: Test
+        run: npm run test
