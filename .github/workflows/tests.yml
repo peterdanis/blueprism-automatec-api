@@ -32,5 +32,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install
         run: npm ci
+      - name: Prepare .env file
+        run: powershell -Command "(gc .sample-env) -replace 'BP_API_AUTH_USERNAME=', 'BP_API_AUTH_USERNAME=user' -replace 'BP_API_AUTH_PASSWORD=', 'BP_API_AUTH_PASSWORD=pw' | Out-File -encoding ASCII .env"
       - name: Test
         run: npm run test
