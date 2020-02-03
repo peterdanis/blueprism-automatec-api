@@ -1,9 +1,19 @@
 {
   "info": {
     "title": "Blue Prism AutomateC API",
-    "version": "0.1.0",
-    "description": "[Specification JSON](/api-spec)"
+    "version": "0.1.0"
   },
+  "security": [
+    {
+      "BasicAuth": []
+    }
+  ],
+  "securityDefinitions": {
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "swagger": "2.0",
   "paths": {
     "/version": {
       "get": {
@@ -144,9 +154,8 @@
             "name": "sessionId",
             "in": "path",
             "required": true,
-            "schema": {
-              "example": "6ee248d1-72f3-4890-af5c-ca9ea6ce4214"
-            }
+            "type": "string",
+            "x-example": "6ee248d1-72f3-4890-af5c-ca9ea6ce4214"
           }
         ],
         "responses": {
@@ -186,9 +195,8 @@
             "name": "sessionId",
             "in": "path",
             "required": true,
-            "schema": {
-              "example": "6ee248d1-72f3-4890-af5c-ca9ea6ce4214"
-            }
+            "type": "string",
+            "x-example": "6ee248d1-72f3-4890-af5c-ca9ea6ce4214"
           }
         ],
         "responses": {
@@ -230,14 +238,5 @@
         "produces": ["application/json"]
       }
     }
-  },
-  "security": {
-    "UserSecurity": []
-  },
-  "securityDefinition": {
-    "UserSecurity": {
-      "type": "basic"
-    }
-  },
-  "swagger": "2.0"
+  }
 }
