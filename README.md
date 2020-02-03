@@ -52,7 +52,7 @@ Any contributions (new features, bug fixes, bug reports, ideas and others) are w
 
 ```bash
 git git clone https://github.com/peterdanis/blueprism-automatec-api.git
-cd wrapbox
+cd blueprism-automatec-api
 ```
 
 - Install dependencies
