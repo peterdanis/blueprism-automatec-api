@@ -1,4 +1,5 @@
 # Blue Prism AutomateC API
+[![Github Actions badge](https://github.com/peterdanis/blueprism-automatec-api/workflows/Tests/badge.svg?event=push)](https://github.com/peterdanis/blueprism-automatec-api/actions)
 
 Aim of this project is to provide HTTP based interface for AutomateC.exe, mainly for purpose of connecting Blue Prism to 3rd party scheduler.
 
