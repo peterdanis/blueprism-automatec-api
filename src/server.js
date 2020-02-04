@@ -88,3 +88,5 @@ server.on("listening", () => {
 });
 
 server.listen(BP_API_PORT, BP_API_IP);
+
+module.exports = server;

@@ -41,14 +41,13 @@ describe("App", () => {
   });
 
   describe("POST /processes", () => {
-    test("should return 400 if process name is missing", async () => {
+    test("should respond with 400 if process name is missing", async () => {
       const res = await request(app)
         .post("/processes")
         .auth(username, pw);
       expect(res.status).toBe(400);
     });
-    test("should return 400 if inputs are wrong", async () => {
-      execFileMockOnce(null, { stdout: "session:x" });
+    test("should respond with 400 if inputs is not an array", async () => {
       const res = await request(app)
         .post("/processes")
         .send({
@@ -58,12 +57,46 @@ describe("App", () => {
         .auth(username, pw);
       expect(res.status).toBe(400);
     });
+    test("should respond with 400 if inputs is not correct", async () => {
+      const res = await request(app)
+        .post("/processes")
+        .send({
+          inputs: [{}],
+          process: "Test",
+        })
+        .auth(username, pw);
+      expect(res.status).toBe(400);
+    });
   });
 
   describe("GET /processes/{sessionId}", () => {
-    test("should return 400 if sessionId has incorrect format", async () => {
+    test("should return status", async () => {
+      execFileMockOnce(null, {
+        stdout: "Status:test",
+      });
+      const res = await request(app)
+        .get("/processes/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+        .auth(username, pw);
+      expect(res.body.status).toBe("test");
+    });
+    test("should respond with 400 if sessionId has incorrect format", async () => {
       const res = await request(app)
         .get("/processes/badId")
+        .auth(username, pw);
+      expect(res.status).toBe(400);
+    });
+  });
+
+  describe("POST /processes/{sessionId}/stop", () => {
+    test("should respond with 202", async () => {
+      const res = await request(app)
+        .post("/processes/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/stop")
+        .auth(username, pw);
+      expect(res.status).toBe(202);
+    });
+    test("should respond with 400 if sessionId has incorrect format", async () => {
+      const res = await request(app)
+        .post("/processes/badId/stop")
         .auth(username, pw);
       expect(res.status).toBe(400);
     });

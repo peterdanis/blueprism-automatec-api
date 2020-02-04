@@ -43,6 +43,9 @@
     "supertest": "^4.0.2"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
     "coverageReporters": [
       "json",
       "lcov",
