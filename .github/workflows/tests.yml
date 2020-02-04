@@ -32,13 +32,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install
         run: npm ci
-      - name: Lint
-        run: npm run lint
       - name: Prepare .env file
         run: powershell -Command "(gc .sample-env) -replace 'BP_API_AUTH_USERNAME=', 'BP_API_AUTH_USERNAME=user' -replace 'BP_API_AUTH_PASSWORD=', 'BP_API_AUTH_PASSWORD=pw' | Out-File -encoding ASCII .env"
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v2.4.0
+      - name: Lint
+        run: npm run lint
+      - name: Test and generate code coverage
+        run: npm run test-cover
+      - name: Upload code coverage
+        run: npx codecov -F ${{ matrix.node-version }}
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_UPLOAD_TOKEN }}
-        with:
-          coverageCommand: npm run test-cover
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
