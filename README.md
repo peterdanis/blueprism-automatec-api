@@ -1,6 +1,7 @@
 # Blue Prism AutomateC API
 [![Github Actions badge](https://github.com/peterdanis/blueprism-automatec-api/workflows/Tests/badge.svg?event=push)](https://github.com/peterdanis/blueprism-automatec-api/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4a3407c9a47ad74a3411/maintainability)](https://codeclimate.com/github/peterdanis/blueprism-automatec-api/maintainability)
+[![codecov](https://codecov.io/gh/peterdanis/blueprism-automatec-api/branch/master/graph/badge.svg)](https://codecov.io/gh/peterdanis/blueprism-automatec-api)
 
 Aim of this project is to provide HTTP based interface for AutomateC.exe, mainly for purpose of connecting Blue Prism to 3rd party scheduler.
 
