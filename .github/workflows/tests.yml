@@ -39,6 +39,6 @@ jobs:
       - name: Test and generate code coverage
         run: npm run test-cover
       - name: Upload code coverage
-        run: npx codecov -F ${{ matrix.node-version }}
+        run: npx codecov --disable=gcov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
