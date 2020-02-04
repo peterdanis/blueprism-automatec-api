@@ -45,6 +45,7 @@
   "jest": {
     "coverageReporters": [
       "json",
+      "lcov",
       "text"
     ],
     "testEnvironment": "node"
