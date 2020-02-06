@@ -19,8 +19,8 @@ cp.exec.mockImplementation(callbackClosure(null, { stdout: "test" }));
 cp.execFile.mockImplementation(callbackClosure(null, { stdout: "test" }));
 
 module.exports = {
-  execFileMock: cp.execFile.mock,
+  execFileMock: cp.execFile,
   execFileMockOnce,
-  execMock: cp.exec.mock,
+  execMock: cp.exec,
   execMockOnce,
 };
