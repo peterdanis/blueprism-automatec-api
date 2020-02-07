@@ -6,12 +6,12 @@ const { BP_API_AUTH, BP_API_AUTH_PASSWORD, BP_API_AUTH_USERNAME } = process.env;
 passport.use(
   new BasicStrategy((username, password, done) => {
     if (
-      BP_API_AUTH_USERNAME !== username &&
-      BP_API_AUTH_PASSWORD !== password
+      BP_API_AUTH_USERNAME === username &&
+      BP_API_AUTH_PASSWORD === password
     ) {
-      return done(null, false);
+      return done(null, username);
     }
-    return done(null, username);
+    return done(null, false);
   }),
 );
 

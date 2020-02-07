@@ -30,9 +30,24 @@ const postProcesses = input => post("/processes", input);
 
 describe("App", () => {
   test("should require authentication", async () => {
-    const res = await request(app).get("/version");
+    const res = await request(app).get("/");
     expect(res.status).toBe(401);
   });
+
+  test("should require correct username", async () => {
+    const res = await request(app)
+      .get("/")
+      .auth(`baduser${Date.now}`, pw);
+    expect(res.status).toBe(401);
+  });
+
+  test("should require correct password", async () => {
+    const res = await request(app)
+      .get("/")
+      .auth(username, `badpw${Date.now}`);
+    expect(res.status).toBe(401);
+  });
+
   test("should return 404 for unknown route", async () => {
     const res = await get("/unknownroute");
     expect(res.status).toBe(404);
