@@ -11,7 +11,7 @@
   ],
   "rules": {
     "linebreak-style": "off",
-    "quotes": ["warn", "double"],
+    "quotes": ["warn", "double", { "avoidEscape": true }],
     "no-plusplus": "off",
     "comma-dangle": [
       "warn",
