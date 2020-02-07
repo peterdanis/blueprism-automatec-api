@@ -48,7 +48,6 @@ const execAutomateC = async (
 };
 
 // Main exported function
-// eslint-disable-next-line consistent-return
 const runAutomateC = async (command, argsObject) => {
   const { sessionId, process, inputs = [] } = argsObject;
   try {
@@ -112,66 +111,56 @@ const runAutomateC = async (command, argsObject) => {
         return "Stop requested";
 
       default:
-        throwError(
+        return throwError(
           "Action for this route is not implemented, check server <-> bin file integration part",
           501,
         );
-        break;
     }
   } catch (error) {
     const { code, message = "", stdout = "" } = error;
 
     switch (true) {
       case code === "ENOENT":
-        throwError("AutomateC.exe not found, check server config", 502);
-        break;
+        return throwError("AutomateC.exe not found, check server config", 502);
 
       case stdout.match(/The session .* is not running/) !== null:
-        throwError("Process is not running", 409);
-        break;
+        return throwError("Process is not running", 409);
 
       case stdout.match(/No information found for that session/) !== null:
-        throwError("No information found for that session", 400);
-        break;
+        return throwError("No information found for that session", 400);
 
       case stdout.match(/Could not find the session with the ID\/number/) !==
         null:
-        throwError("Could not find the session with the ID/number", 400);
-        break;
+        return throwError("Could not find the session with the ID/number", 400);
 
       case stdout.match(/process .* does not exist/) !== null:
-        throwError("Process does not exist", 400);
-        break;
+        return throwError("Process does not exist", 400);
 
       case stdout.match(
         /can not create session to run process - The maximum number of concurrent sessions permitted by the current license would be exceeded/,
       ) !== null:
-        throwError(
+        return throwError(
           "The maximum number of concurrent sessions permitted by the current BluePrism license would be exceeded",
           503,
         );
-        break;
 
       case stdout.match(/Authentication error - RESTRICTED : /) !== null:
-        throwError(
+        return throwError(
           `Runtime resource is locked / used by another user: ${stdout.replace(
             "Authentication error - RESTRICTED : ",
             "",
           )}`,
           503,
         );
-        break;
 
       case stdout.match(/could not connect to resource/) !== null:
-        throwError("Could not connect to resource", 503);
-        break;
+        return throwError("Could not connect to resource", 503);
 
       case message.match(/Command failed:/) !== null:
-        throwError(
+        return throwError(
           `Command failed. Details: ${stdout.replace(/(\n)|(\r)/g, "")}`,
           500,
         );
-        break;
 
       default:
         throw error;
