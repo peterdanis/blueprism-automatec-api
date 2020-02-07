@@ -52,10 +52,32 @@ describe("App", () => {
     const res = await get("/unknownroute");
     expect(res.status).toBe(404);
   });
+
   test("should return 500 in case of error", async () => {
-    execMockOnce(new Error("test"));
-    const res = await post("/reset");
-    expect(res.status).toBe(500);
+    const error = new Error("Command failed: something went wrong");
+    execMockOnce(error);
+    execFileMockOnce(error);
+    execFileMockOnce(error);
+    execFileMockOnce(error);
+    const tests = [
+      { fn: post, route: "/reset" },
+      { fn: post, input: { process: "Test" }, route: "/processes" },
+      {
+        fn: get,
+        route: "/processes/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      },
+      {
+        fn: post,
+        route: "/processes/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/stop",
+      },
+    ];
+    const values = await Promise.all(
+      tests.map(async ({ fn, input, route }) => fn(route, input)),
+    );
+    values.forEach(res => {
+      expect(res.status).toBe(500);
+    });
+    expect.assertions(4);
   });
 
   describe("GET /version", () => {
@@ -74,9 +96,13 @@ describe("App", () => {
       const res = await postProcesses({
         process: "Test",
       });
-      expect(res.body).toHaveProperty("sessionId");
       expect(res.status).toBe(201);
+      expect(res.body).toHaveProperty("sessionId");
+      expect(res.body.sessionId).toMatchInlineSnapshot(
+        '"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"',
+      );
     });
+
     test("should accept inputs", async () => {
       execFileMockOnce(null, {
         stdout: "session:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -93,35 +119,83 @@ describe("App", () => {
       });
       expect(res.status).toBe(201);
     });
+
     test("should respond with 400 if process name is missing", async () => {
       const res = await postProcesses();
       expect(res.status).toBe(400);
     });
-    test("should respond with 400 if inputs is not an array", async () => {
+
+    test("should respond with 400 if inputs are not an array", async () => {
       const res = await postProcesses({
         inputs: {},
         process: "Test",
       });
       expect(res.status).toBe(400);
+      expect(res.body.error).toMatchInlineSnapshot('"Inputs must be an array"');
     });
-    test("should respond with 400 if inputs is not correct", async () => {
+
+    test("should respond with 400 if inputs are not correct", async () => {
       const res = await postProcesses({
         inputs: [{}],
         process: "Test",
       });
       expect(res.status).toBe(400);
+      expect(res.body.error).toMatchInlineSnapshot(
+        "\"Each item in Inputs array must have '@name', '@value' and '@type' properties. In addition, '@type' must be 'text'\"",
+      );
+    });
+
+    test("should respond with 400 if process is not found", async () => {
+      const error = new Error();
+      error.stdout = "Error: process 'Test' does not exist";
+      execFileMockOnce(error);
+      const res = await postProcesses({
+        process: "Test",
+      });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatchInlineSnapshot('"Process does not exist"');
+    });
+
     test("should respond with 503 if resource is locked / used by another user", async () => {
       const error = new Error();
       error.stdout = "Authentication error - RESTRICTED : user@company.com";
       execFileMockOnce(error);
       const res = await postProcesses({
         process: "Test",
-    });
+      });
       expect(res.status).toBe(503);
       expect(res.body.error).toMatchInlineSnapshot(
         '"Runtime resource is locked / used by another user: user@company.com"',
       );
-  });
+    });
+
+    test("should respond with 503 if connecting to resource is not possible", async () => {
+      const error = new Error();
+      error.stdout =
+        "Error: could not connect to resource HOSTNAME -Connection to the resource timed out.";
+      execFileMockOnce(error);
+      const res = await postProcesses({
+        process: "Test",
+      });
+      expect(res.status).toBe(503);
+      expect(res.body.error).toMatchInlineSnapshot(
+        '"Could not connect to resource"',
+      );
+    });
+
+    test("should respond with 503 if maximum number of concurrent sessions permitted by the license is exceeded", async () => {
+      const error = new Error();
+      error.stdout =
+        "can not create session to run process - The maximum number of concurrent sessions permitted by the current license would be exceeded";
+      execFileMockOnce(error);
+      const res = await postProcesses({
+        process: "Test",
+      });
+      expect(res.status).toBe(503);
+      expect(res.body.error).toMatchInlineSnapshot(
+        '"The maximum number of concurrent sessions permitted by the current BluePrism license would be exceeded"',
+      );
+    });
   });
 
   describe("GET /processes/{sessionId}", () => {
@@ -132,6 +206,7 @@ describe("App", () => {
       const res = await get("/processes/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
       expect(res.body.status).toBe("test");
     });
+
     test("should respond with 400 if sessionId has incorrect format", async () => {
       const res = await get("/processes/badId");
       expect(res.status).toBe(400);
@@ -145,9 +220,27 @@ describe("App", () => {
       );
       expect(res.status).toBe(202);
     });
+
     test("should respond with 400 if sessionId has incorrect format", async () => {
       const res = await post("/processes/badId/stop");
       expect(res.status).toBe(400);
+      expect(res.body.error).toMatchInlineSnapshot(
+        '"Supplied session ID is not a valid session identifier. The correct format is xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"',
+      );
+    });
+
+    test("should respond with 400 if sessionId could not be found", async () => {
+      const error = new Error();
+      error.stdout =
+        "Could not find the session with the ID/number: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+      execFileMockOnce(error);
+      const res = await post(
+        "/processes/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/stop",
+      );
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatchInlineSnapshot(
+        '"Could not find the session with the ID/number"',
+      );
     });
   });
 
@@ -188,9 +281,9 @@ describe("App", () => {
         ]
       `);
     });
+
     test("should ignore known errors", async () => {
       execMock.mockClear();
-      // eslint-disable-next-line quotes
       execMockOnce(new Error('process "automate.exe" not found'));
       execMockOnce(null, { stdout: "test" });
       execMockOnce(new Error("The service name is invalid"));
