@@ -8,5 +8,6 @@
     <sizeThreshold>1024</sizeThreshold>
     <keepFiles>8</keepFiles>
   </log>
+  <logpath>%BASE%\logs</logpath>
   <onfailure action="restart" />
 </service>

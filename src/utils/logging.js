@@ -9,7 +9,7 @@ const setup = app => {
     // create a rotating write stream
     const accessLogStream = rfs.createStream("access.log", {
       interval: "7d", // rotate weekly
-      path: path.join("log"),
+      path: path.join("logs"),
       size: "1M",
     });
     app.use(logger("combined", { stream: accessLogStream }));
