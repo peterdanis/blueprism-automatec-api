@@ -152,6 +152,16 @@ const runAutomateC = async (command, argsObject) => {
         );
         break;
 
+      case stdout.match(/Authentication error - RESTRICTED : /) !== null:
+        throwError(
+          `Runtime resource is locked / used by another user: ${stdout.replace(
+            "Authentication error - RESTRICTED : ",
+            "",
+          )}`,
+          503,
+        );
+        break;
+
       case stdout.match(/could not connect to resource/) !== null:
         throwError("Could not connect to resource", 503);
         break;

@@ -110,7 +110,18 @@ describe("App", () => {
         process: "Test",
       });
       expect(res.status).toBe(400);
+    test("should respond with 503 if resource is locked / used by another user", async () => {
+      const error = new Error();
+      error.stdout = "Authentication error - RESTRICTED : user@company.com";
+      execFileMockOnce(error);
+      const res = await postProcesses({
+        process: "Test",
     });
+      expect(res.status).toBe(503);
+      expect(res.body.error).toMatchInlineSnapshot(
+        '"Runtime resource is locked / used by another user: user@company.com"',
+      );
+  });
   });
 
   describe("GET /processes/{sessionId}", () => {
