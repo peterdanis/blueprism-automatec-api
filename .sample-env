@@ -38,6 +38,9 @@ BP_API_IP=0.0.0.0
 #  Rate limiter settings
 BP_API_RATE_LIMIT=200
 
+#  Do full reset (kill, logoff, restart Login Agent) if set to 'true' or kill automate.exe only if set to 'false'
+BP_API_FULL_RESET=true
+
 #  Path to folder, in which AutomateC.exe is located (default path is C:\Program Files\Blue Prism Limited\Blue Prism Automate)
 BP_API_EXE_DIR=C:\Program Files\Blue Prism Limited\Blue Prism Automate
 
