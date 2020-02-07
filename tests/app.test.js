@@ -2,8 +2,11 @@ require("dotenv").config();
 const app = require("../src/app");
 const request = require("supertest");
 const {
+  execFileMock,
+  execFileMockDefault,
   execFileMockOnce,
   execMock,
+  execMockDefault,
   execMockOnce,
 } = require("./child_process.mock");
 const { version } = require("../package.json");
@@ -27,6 +30,15 @@ const post = (route, input) =>
     .auth(username, pw);
 
 const postProcesses = input => post("/processes", input);
+
+beforeEach(() => {
+  // Reset mock before each test, to avoid test interfere with each other
+  execMock.mockReset();
+  execFileMock.mockReset();
+  // Add default mock implementation
+  execMockDefault(null, { stdout: "test" });
+  execFileMockDefault(null, { stdout: "test" });
+});
 
 describe("App", () => {
   test("should require authentication", async () => {
@@ -187,6 +199,7 @@ describe("App", () => {
       const error = new Error();
       error.stdout =
         "can not create session to run process - The maximum number of concurrent sessions permitted by the current license would be exceeded";
+      execFileMockOnce(error);
       execFileMockOnce(error);
       const res = await postProcesses({
         process: "Test",

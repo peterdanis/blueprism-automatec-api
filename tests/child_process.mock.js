@@ -14,13 +14,19 @@ const execFileMockOnce = (err, intendedOutput) => {
   cp.execFile.mockImplementationOnce(callbackClosure(err, intendedOutput));
 };
 
-// Add default mock implementation
-cp.exec.mockImplementation(callbackClosure(null, { stdout: "test" }));
-cp.execFile.mockImplementation(callbackClosure(null, { stdout: "test" }));
+const execMockDefault = (err, intendedOutput) => {
+  cp.exec.mockImplementation(callbackClosure(err, intendedOutput));
+};
+
+const execFileMockDefault = (err, intendedOutput) => {
+  cp.execFile.mockImplementation(callbackClosure(err, intendedOutput));
+};
 
 module.exports = {
   execFileMock: cp.execFile,
+  execFileMockDefault,
   execFileMockOnce,
   execMock: cp.exec,
+  execMockDefault,
   execMockOnce,
 };
