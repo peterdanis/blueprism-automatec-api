@@ -72,7 +72,7 @@ const runAutomateC = async (command, argsObject) => {
 
         // Inputs checks
         if (Array.isArray(inputs)) {
-          inputs.forEach(input => {
+          inputs.forEach((input) => {
             if (
               typeof input["@name"] !== "string" ||
               typeof input["@value"] !== "string" ||

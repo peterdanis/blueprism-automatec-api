@@ -5,7 +5,7 @@ const express = require("express");
 const { BP_API_FULL_RESET } = process.env;
 
 // eslint-disable-next-line consistent-return
-const logoff = value => {
+const logoff = (value) => {
   // eslint-disable-next-line security/detect-unsafe-regex
   const id = value.match(/((?<id>[1-9][0-9]*)[ ]+)(disc|active)/i);
   if (id) {

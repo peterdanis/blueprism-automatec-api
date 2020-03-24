@@ -15,7 +15,7 @@ passport.use(
   }),
 );
 
-const setup = app => {
+const setup = (app) => {
   if (BP_API_AUTH === "basic") {
     app.use(passport.initialize());
     app.use(passport.authenticate("basic", { session: false }));

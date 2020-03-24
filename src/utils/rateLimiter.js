@@ -7,7 +7,7 @@ const limiter = rateLimit({
   windowMs: 1 * 60 * 1000,
 });
 
-const setup = app => {
+const setup = (app) => {
   app.use(limiter);
 };
 

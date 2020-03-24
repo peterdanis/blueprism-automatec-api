@@ -75,7 +75,7 @@ if (BP_API_HTTPS === "true") {
   debug("Warning: Using HTTPS over HTTP is highly recommended in production");
 }
 
-server.on("error", error => {
+server.on("error", (error) => {
   debug(error);
 });
 server.on("listening", () => {

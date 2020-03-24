@@ -2,7 +2,7 @@ const expressOasGenerator = require("express-oas-generator"); // eslint-disable-
 const swaggerUi = require("swagger-ui-express");
 const OasSpec = require("./oas-spec.json");
 
-const setup = app => {
+const setup = (app) => {
   if (process.env.NODE_ENV !== "production") {
     expressOasGenerator.init(app, OasSpec);
   }

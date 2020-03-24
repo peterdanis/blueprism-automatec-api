@@ -18,18 +18,12 @@ const {
   BP_API_AUTH_USERNAME: username,
 } = process.env;
 
-const get = route =>
-  request(app)
-    .get(route)
-    .auth(username, pw);
+const get = (route) => request(app).get(route).auth(username, pw);
 
 const post = (route, input) =>
-  request(app)
-    .post(route)
-    .send(input)
-    .auth(username, pw);
+  request(app).post(route).send(input).auth(username, pw);
 
-const postProcesses = input => post("/processes", input);
+const postProcesses = (input) => post("/processes", input);
 
 beforeEach(() => {
   // Reset mock before each test, to avoid test interfere with each other
@@ -47,16 +41,12 @@ describe("App", () => {
   });
 
   test("should require correct username", async () => {
-    const res = await request(app)
-      .get("/")
-      .auth(`baduser${Date.now}`, pw);
+    const res = await request(app).get("/").auth(`baduser${Date.now}`, pw);
     expect(res.status).toBe(401);
   });
 
   test("should require correct password", async () => {
-    const res = await request(app)
-      .get("/")
-      .auth(username, `badpw${Date.now}`);
+    const res = await request(app).get("/").auth(username, `badpw${Date.now}`);
     expect(res.status).toBe(401);
   });
 
@@ -86,7 +76,7 @@ describe("App", () => {
     const values = await Promise.all(
       tests.map(async ({ fn, input, route }) => fn(route, input)),
     );
-    values.forEach(res => {
+    values.forEach((res) => {
       expect(res.status).toBe(500);
     });
     expect.assertions(4);

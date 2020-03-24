@@ -6,6 +6,7 @@
     "build": "rmdir /Q /S build & nexe -i ./src/server.js -o ./build/Blue_Prism_AutomateC_API_server.exe -t windows-x64-12.15.0 && copy .\\assets\\*.* .\\build\\ && ren .\\build\\WinSW.NET4.exe Blue_Prism_AutomateC_API_installer.exe && powershell -Command \"(gc .sample-env) -replace 'NODE_ENV=development', 'NODE_ENV=production' -replace 'BP_API_FILELOG=false', 'BP_API_FILELOG=true' | Out-File -encoding ASCII ./build/.env\"",
     "debug": "set DEBUG=express:* & npm start",
     "lint": "eslint src/**/*.js tests/**/*.js",
+    "lint-fix": "eslint --fix src/**/*.js tests/**/*.js",
     "start": "nodemon --watch .env --watch src ./src/server.js",
     "test": "jest",
     "test-cover": "jest --coverage --noStackTrace",
@@ -42,7 +43,7 @@
     "jest": "^25.1.0",
     "nexe": "^3.3.2",
     "nodemon": "^2.0.2",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.2",
     "supertest": "^4.0.2"
   },
   "jest": {
