@@ -33,7 +33,7 @@ jobs:
       - name: Install
         run: npm ci
       - name: Prepare .env file
-        run: powershell -Command "(gc .sample-env) -replace 'BP_API_AUTH_USERNAME=', 'BP_API_AUTH_USERNAME=user' -replace 'BP_API_AUTH_PASSWORD=', 'BP_API_AUTH_PASSWORD=pw' | Out-File -encoding ASCII .env"
+        run: powershell -Command "(gc .sample-env) -replace 'BP_API_AUTH_USERNAME=', 'BP_API_AUTH_USERNAME=user' -replace 'BP_API_AUTH_PASSWORD=', 'BP_API_AUTH_PASSWORD=pw' -replace 'BP_API_DBCONNAME=', 'BP_API_DBCONNAME=test' | Out-File -encoding ASCII .env"
       - name: Lint
         run: npm run lint
       - name: Test and generate code coverage
