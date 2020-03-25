@@ -50,6 +50,8 @@ const execAutomateC = async (
 // Main exported function
 const runAutomateC = async (command, argsObject) => {
   const { sessionId, process, inputs = [] } = argsObject;
+  let xml;
+
   try {
     switch (command) {
       case "getStatus":
@@ -70,14 +72,18 @@ const runAutomateC = async (command, argsObject) => {
           throwError("Incorrect process name supplied", 400);
         }
 
-        // Inputs checks
+        // Check inputs / startup parameters and build it as xml
         if (Array.isArray(inputs)) {
           inputs.forEach((input) => {
             if (
-              typeof input["@name"] !== "string" ||
-              typeof input["@value"] !== "string" ||
-              input["@type"] !== "text"
+              typeof input["@name"] === "string" &&
+              typeof input["@value"] === "string" &&
+              input["@type"] === "text"
             ) {
+              xml = xmlBuilder
+                .create({ inputs: { input: inputs } }, { headless: true })
+                .end();
+            } else {
               throwError(
                 "Each item in Inputs array must have '@name', '@value' and '@type' properties. In addition, '@type' must be 'text'",
                 400,
@@ -87,11 +93,6 @@ const runAutomateC = async (command, argsObject) => {
         } else {
           throwError("Inputs must be an array", 400);
         }
-
-        // eslint-disable-next-line no-case-declarations
-        const xml = xmlBuilder
-          .create({ inputs: { input: inputs } }, { headless: true })
-          .end();
 
         return await execAutomateC(
           "/run",

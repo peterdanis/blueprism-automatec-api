@@ -14,6 +14,7 @@ const { version } = require("../package.json");
 jest.mock("child_process");
 
 const {
+  BP_API_DBCONNAME,
   BP_API_AUTH_PASSWORD: pw,
   BP_API_AUTH_USERNAME: username,
 } = process.env;
@@ -91,17 +92,53 @@ describe("App", () => {
   });
 
   describe("POST /processes", () => {
-    test("should respond 201 and return sessionId", async () => {
+    test("should respond 201 and return sessionId (without inputs / startup parameters)", async () => {
       execFileMockOnce(null, {
         stdout: "session:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       });
       const res = await postProcesses({
         process: "Test",
       });
+      const callArgs = execFileMock.mock.calls[0][1];
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty("sessionId");
       expect(res.body.sessionId).toMatchInlineSnapshot(
         '"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"',
+      );
+      expect(callArgs).toMatchInlineSnapshot(`
+        Array [
+          "/dbconname",
+          "${BP_API_DBCONNAME}",
+          "/sso",
+          "/run",
+          "Test",
+        ]
+      `);
+    });
+
+    test("should respond 201 and return sessionId (with inputs / startup parameters)", async () => {
+      execFileMockOnce(null, {
+        stdout: "session:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      });
+      const res = await postProcesses({
+        inputs: [
+          {
+            "@name": "Test param",
+            "@type": "text",
+            "@value": "test",
+          },
+        ],
+        process: "Test",
+      });
+      const inputsXml = execFileMock.mock.calls[0][1][6];
+
+      expect(res.status).toBe(201);
+      expect(res.body).toHaveProperty("sessionId");
+      expect(res.body.sessionId).toMatchInlineSnapshot(
+        '"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"',
+      );
+      expect(inputsXml).toMatchInlineSnapshot(
+        '"<inputs><input name=\\"Test param\\" type=\\"text\\" value=\\"test\\"/></inputs>"',
       );
     });
 
