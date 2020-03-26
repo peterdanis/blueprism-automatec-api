@@ -24,7 +24,7 @@
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
     "rotating-file-stream": "^2.0.2",
-    "swagger-ui-express": "^4.1.3",
+    "swagger-ui-express": "^4.1.4",
     "xmlbuilder": "^15.1.0"
   },
   "devDependencies": {
