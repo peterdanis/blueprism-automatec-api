@@ -42,12 +42,14 @@ describe("App", () => {
   });
 
   test("should require correct username", async () => {
-    const res = await request(app).get("/").auth(`baduser${Date.now}`, pw);
+    const res = await request(app).get("/").auth(`baduser${Date.now()}`, pw);
     expect(res.status).toBe(401);
   });
 
   test("should require correct password", async () => {
-    const res = await request(app).get("/").auth(username, `badpw${Date.now}`);
+    const res = await request(app)
+      .get("/")
+      .auth(username, `badpw${Date.now()}`);
     expect(res.status).toBe(401);
   });
 
