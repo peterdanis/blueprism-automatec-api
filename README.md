@@ -2,6 +2,7 @@
 [![Github Actions badge](https://github.com/peterdanis/blueprism-automatec-api/workflows/Tests/badge.svg?event=push)](https://github.com/peterdanis/blueprism-automatec-api/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4a3407c9a47ad74a3411/maintainability)](https://codeclimate.com/github/peterdanis/blueprism-automatec-api/maintainability)
 [![codecov](https://codecov.io/gh/peterdanis/blueprism-automatec-api/branch/master/graph/badge.svg)](https://codecov.io/gh/peterdanis/blueprism-automatec-api)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpeterdanis%2Fblueprism-automatec-api.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpeterdanis%2Fblueprism-automatec-api?ref=badge_shield)
 
 Aim of this project is to provide HTTP based interface for AutomateC.exe, mainly for purpose of connecting Blue Prism to 3rd party scheduler.
 
@@ -99,3 +100,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpeterdanis%2Fblueprism-automatec-api.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpeterdanis%2Fblueprism-automatec-api?ref=badge_large)
