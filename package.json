@@ -23,7 +23,7 @@
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
-    "rotating-file-stream": "^2.0.2",
+    "rotating-file-stream": "^2.1.0",
     "swagger-ui-express": "^4.1.4",
     "xmlbuilder": "^15.1.1"
   },
