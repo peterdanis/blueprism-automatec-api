@@ -41,7 +41,7 @@
     "eslint-plugin-security": "^1.4.0",
     "express-oas-generator": "1.0.23",
     "jest": "^26.1.0",
-    "nexe": "^3.3.3",
+    "nexe": "^3.3.7",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "supertest": "^4.0.2"
