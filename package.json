@@ -40,7 +40,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-security": "^1.4.0",
     "express-oas-generator": "1.0.23",
-    "jest": "^26.1.0",
+    "jest": "^26.2.2",
     "nexe": "^3.3.7",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
