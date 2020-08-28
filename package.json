@@ -43,7 +43,7 @@
     "jest": "^26.1.0",
     "nexe": "^3.3.7",
     "nodemon": "^2.0.4",
-    "prettier": "^2.0.5",
+    "prettier": "^2.1.1",
     "supertest": "^4.0.2"
   },
   "jest": {
