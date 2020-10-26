@@ -52,7 +52,8 @@
         "groups": [],
         "newlines-between": "never"
       }
-    ]
+    ],
+    "jest/no-interpolation-in-snapshots": ["warn"] 
   },
   "env": {
     "es6": true,
