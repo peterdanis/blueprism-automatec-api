@@ -15,7 +15,7 @@ const dir =
   "C:\\Program Files\\Blue Prism Limited\\Blue Prism Automate";
 const bin = path.join(dir, "AutomateC.exe");
 const idRegexp = new RegExp(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
-const nameRegexp = new RegExp(/^[\w\- _().:]+$/);
+const nameRegexp = new RegExp(/^[\w\pL\- _()[\].:,]+$/);
 
 // Helper functions
 const throwError = (message, statusCode) => {

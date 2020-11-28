@@ -94,6 +94,20 @@ describe("App", () => {
   });
 
   describe("POST /processes", () => {
+    test("should check process name and respond accordingly", async () => {
+      execFileMockOnce(null, {
+        stdout: "session:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      });
+      const res = await postProcesses({
+        process: "01_Test-of(name,name):[A].",
+      });
+      expect(res.status).toBe(201);
+      const res2 = await postProcesses({
+        process: "\\.",
+      });
+      expect(res2.status).toBe(400);
+    });
+
     test("should respond 201 and return sessionId (without inputs / startup parameters)", async () => {
       execFileMockOnce(null, {
         stdout: "session:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
