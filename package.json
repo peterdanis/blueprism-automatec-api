@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/express": "^4.17.11",
     "@types/jest": "^26.0.20",
-    "@types/node": "^14.14.28",
+    "@types/node": "^14.14.31",
     "eslint": "^7.20.0",
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-config-prettier": "^8.1.0",
