@@ -1,0 +1,32 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: thursday
+    time: "07:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: "@types/node"
+    versions:
+    - 14.14.35
+    - 14.14.36
+    - 14.14.39
+    - 14.14.41
+  - dependency-name: eslint
+    versions:
+    - 7.24.0
+  - dependency-name: eslint-config-prettier
+    versions:
+    - 8.2.0
+  - dependency-name: eslint-plugin-jest
+    versions:
+    - 24.3.4
+    - 24.3.5
+  - dependency-name: express-oas-generator
+    versions:
+    - 1.0.33
+  - dependency-name: "@types/jest"
+    versions:
+    - 26.0.22
